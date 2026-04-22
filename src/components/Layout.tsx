@@ -47,11 +47,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <header className="sticky top-0 z-50 bg-background/85 backdrop-blur-md border-b border-border">
+        <div className="container mx-auto px-4 py-5 flex justify-between items-center">
           <div className="flex items-center">
-            <NavLink to="/" className="flex items-center">
-              <span className="text-juicy-green font-bold text-2xl md:text-3xl">JuiceJoy</span>
+            <NavLink to="/" className="flex flex-col items-start leading-none">
+              <span className="text-[10px] tracking-[0.25em] text-muted-foreground">EST. 2023</span>
+              <span className="font-display text-2xl md:text-3xl text-foreground">LIFESTYLE 1104</span>
+              <span className="text-[10px] tracking-[0.35em] text-muted-foreground">JUICE BAR</span>
             </NavLink>
           </div>
 
@@ -62,8 +64,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `text-base font-medium transition duration-200 hover:text-juicy-green ${
-                    isActive ? "text-juicy-green" : "text-gray-600"
+                  `text-xs tracking-[0.2em] uppercase font-medium transition duration-200 hover:text-foreground ${
+                    isActive ? "text-foreground" : "text-muted-foreground"
                   }`
                 }
               >
@@ -113,9 +115,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             <NavLink to="/cart" className="relative mr-2">
               <Button variant="ghost" className="rounded-full p-2">
-                <ShoppingCart className="h-6 w-6 text-gray-600" />
+                <ShoppingCart className="h-5 w-5 text-foreground" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-juicy-orange text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-foreground text-background text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}
@@ -133,7 +135,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <SheetContent side="right" className="w-[250px] sm:w-[300px]">
                   <div className="flex flex-col h-full py-6">
                     <div className="flex items-center justify-between mb-8">
-                      <span className="text-juicy-green font-bold text-xl">JuiceJoy</span>
+                      <span className="font-display text-xl text-foreground">LIFESTYLE 1104</span>
                       <Button variant="ghost" size="icon" onClick={toggleMenu}>
                         <X className="h-5 w-5" />
                       </Button>
@@ -145,10 +147,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                           to={item.path}
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
-                            `px-2 py-2 rounded-md ${
+                            `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                               isActive
-                                ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                ? "bg-muted text-foreground font-medium"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             }`
                           }
                         >
@@ -163,10 +165,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                               to="/business-dashboard"
                               onClick={() => setIsMenuOpen(false)}
                               className={({ isActive }) =>
-                                `px-2 py-2 rounded-md ${
+                                `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                                   isActive
-                                    ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                    : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                    ? "bg-muted text-foreground font-medium"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                 }`
                               }
                             >
@@ -177,10 +179,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                               to="/my-orders"
                               onClick={() => setIsMenuOpen(false)}
                               className={({ isActive }) =>
-                                `px-2 py-2 rounded-md ${
+                                `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                                   isActive
-                                    ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                    : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                    ? "bg-muted text-foreground font-medium"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                 }`
                               }
                             >
@@ -204,10 +206,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                           to="/login"
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
-                            `px-2 py-2 rounded-md ${
+                            `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                               isActive
-                                ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                ? "bg-muted text-foreground font-medium"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             }`
                           }
                         >
@@ -227,23 +229,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      <footer className="bg-gray-50 py-10">
+      <footer className="bg-foreground text-background py-12 mt-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-lg font-bold mb-4">JuiceJoy</h3>
-              <p className="text-gray-600 mb-4">
-                Bringing fresh, nutritious juices to you daily. Made from locally sourced fruits and vegetables.
+              <span className="text-[10px] tracking-[0.25em] text-background/60">EST. 2023</span>
+              <h3 className="font-display text-xl mt-1 mb-3">LIFESTYLE 1104</h3>
+              <p className="text-background/70 mb-4 text-sm leading-relaxed">
+                Cold-pressed juices and handcrafted smoothies — made fresh, made for the way you live.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+              <h3 className="text-xs tracking-[0.25em] uppercase mb-4 text-background/60">Explore</h3>
               <ul className="space-y-2">
                 {navItems.map((item) => (
                   <li key={item.path}>
                     <NavLink 
                       to={item.path} 
-                      className="text-gray-600 hover:text-juicy-green transition-colors"
+                      className="text-background/80 hover:text-background transition-colors text-sm"
                     >
                       {item.label}
                     </NavLink>
@@ -252,7 +255,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <li>
                   <NavLink 
                     to="/cart" 
-                    className="text-gray-600 hover:text-juicy-green transition-colors"
+                    className="text-background/80 hover:text-background transition-colors text-sm"
                   >
                     Cart
                   </NavLink>
@@ -261,7 +264,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <li>
                     <NavLink 
                       to="/my-orders" 
-                      className="text-gray-600 hover:text-juicy-green transition-colors"
+                      className="text-background/80 hover:text-background transition-colors text-sm"
                     >
                       My Orders
                     </NavLink>
@@ -270,15 +273,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-bold mb-4">Contact</h3>
-              <p className="text-gray-600 mb-2">123 Juice Street</p>
-              <p className="text-gray-600 mb-2">Freshville, CA 90210</p>
-              <p className="text-gray-600 mb-2">Phone: (555) 123-4567</p>
-              <p className="text-gray-600">Email: hello@juicejoy.com</p>
+              <h3 className="text-xs tracking-[0.25em] uppercase mb-4 text-background/60">Visit</h3>
+              <p className="text-background/80 mb-2 text-sm">Follow us on Instagram</p>
+              <a href="https://www.instagram.com/lifestyle1104juicebar" target="_blank" rel="noopener noreferrer" className="text-background underline underline-offset-4 text-sm">@lifestyle1104juicebar</a>
             </div>
           </div>
-          <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} JuiceJoy. All rights reserved.</p>
+          <div className="border-t border-background/15 mt-10 pt-6 text-center text-background/50 text-xs tracking-wider">
+            <p>© {new Date().getFullYear()} LIFESTYLE 1104 JUICE BAR</p>
           </div>
         </div>
       </footer>

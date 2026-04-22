@@ -55,21 +55,22 @@ const Menu = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-juicy-orange/90 to-juicy-yellow/90 py-12 md:py-20">
+      <section className="bg-muted/40 border-b border-border py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Juice Menu</h1>
-          <p className="text-white/90 max-w-2xl mx-auto mb-8">
-            Explore our selection of freshly pressed juices, packed with nutrients and bursting with flavor.
+          <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">The Menu</span>
+          <h1 className="font-display text-5xl md:text-7xl mt-3 mb-5 text-foreground">EVERY SIP, INTENTIONAL.</h1>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+            Cold-pressed juices and small-batch smoothies — made fresh every day.
           </p>
           <div className="relative max-w-md mx-auto">
             <Input
               type="text"
-              placeholder="Search juices, ingredients..."
-              className="pl-10 py-6 rounded-full bg-white/90 backdrop-blur-sm border-transparent focus:border-white"
+              placeholder="Search the menu..."
+              className="pl-10 py-6 rounded-full bg-background border-border"
               value={searchTerm}
               onChange={handleSearchChange}
             />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           </div>
         </div>
       </section>
@@ -115,40 +116,38 @@ const Menu = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-muted/40 py-20 border-t border-border">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Benefits of Fresh Juice</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover why incorporating fresh juice into your daily routine can transform your health
-            </p>
+          <div className="text-center mb-14">
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Why It Matters</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">REAL FOOD. REAL RESULTS.</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="font-bold text-lg mb-3 text-juicy-green">Increased Energy</h3>
-              <p className="text-gray-600">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="bg-background p-8 rounded-2xl border border-border">
+              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">ENERGY</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 Fresh juices provide an instant boost of vitamins and minerals that help fight fatigue and increase your energy levels naturally.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="font-bold text-lg mb-3 text-juicy-green">Improved Digestion</h3>
-              <p className="text-gray-600">
+            <div className="bg-background p-8 rounded-2xl border border-border">
+              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">DIGESTION</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 The enzymes in fresh juice aid digestion and help your body absorb nutrients more effectively.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="font-bold text-lg mb-3 text-juicy-green">Better Skin Health</h3>
-              <p className="text-gray-600">
+            <div className="bg-background p-8 rounded-2xl border border-border">
+              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">GLOW</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 Antioxidants in fresh juices help combat free radicals, leading to clearer, more radiant skin.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="font-bold text-lg mb-3 text-juicy-green">Immune System Support</h3>
-              <p className="text-gray-600">
+            <div className="bg-background p-8 rounded-2xl border border-border">
+              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">IMMUNITY</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 Regular consumption of fresh juices strengthens your immune system and helps your body fight off illnesses.
               </p>
             </div>

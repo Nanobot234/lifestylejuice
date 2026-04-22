@@ -135,7 +135,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <SheetContent side="right" className="w-[250px] sm:w-[300px]">
                   <div className="flex flex-col h-full py-6">
                     <div className="flex items-center justify-between mb-8">
-                      <span className="text-juicy-green font-bold text-xl">JuiceJoy</span>
+                      <span className="font-display text-xl text-foreground">LIFESTYLE 1104</span>
                       <Button variant="ghost" size="icon" onClick={toggleMenu}>
                         <X className="h-5 w-5" />
                       </Button>
@@ -147,10 +147,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                           to={item.path}
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
-                            `px-2 py-2 rounded-md ${
+                            `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                               isActive
-                                ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                ? "bg-muted text-foreground font-medium"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             }`
                           }
                         >
@@ -165,10 +165,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                               to="/business-dashboard"
                               onClick={() => setIsMenuOpen(false)}
                               className={({ isActive }) =>
-                                `px-2 py-2 rounded-md ${
+                                `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                                   isActive
-                                    ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                    : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                    ? "bg-muted text-foreground font-medium"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                 }`
                               }
                             >
@@ -179,10 +179,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                               to="/my-orders"
                               onClick={() => setIsMenuOpen(false)}
                               className={({ isActive }) =>
-                                `px-2 py-2 rounded-md ${
+                                `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                                   isActive
-                                    ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                    : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                    ? "bg-muted text-foreground font-medium"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                 }`
                               }
                             >
@@ -206,10 +206,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                           to="/login"
                           onClick={() => setIsMenuOpen(false)}
                           className={({ isActive }) =>
-                            `px-2 py-2 rounded-md ${
+                            `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
                               isActive
-                                ? "bg-juicy-green/10 text-juicy-green font-medium"
-                                : "text-gray-600 hover:bg-juicy-green/5 hover:text-juicy-green"
+                                ? "bg-muted text-foreground font-medium"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             }`
                           }
                         >

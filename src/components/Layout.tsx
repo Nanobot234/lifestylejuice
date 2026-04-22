@@ -47,11 +47,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <header className="sticky top-0 z-50 bg-background/85 backdrop-blur-md border-b border-border">
+        <div className="container mx-auto px-4 py-5 flex justify-between items-center">
           <div className="flex items-center">
-            <NavLink to="/" className="flex items-center">
-              <span className="text-juicy-green font-bold text-2xl md:text-3xl">JuiceJoy</span>
+            <NavLink to="/" className="flex flex-col items-start leading-none">
+              <span className="text-[10px] tracking-[0.25em] text-muted-foreground">EST. 2023</span>
+              <span className="font-display text-2xl md:text-3xl text-foreground">LIFESTYLE 1104</span>
+              <span className="text-[10px] tracking-[0.35em] text-muted-foreground">JUICE BAR</span>
             </NavLink>
           </div>
 
@@ -62,8 +64,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `text-base font-medium transition duration-200 hover:text-juicy-green ${
-                    isActive ? "text-juicy-green" : "text-gray-600"
+                  `text-xs tracking-[0.2em] uppercase font-medium transition duration-200 hover:text-foreground ${
+                    isActive ? "text-foreground" : "text-muted-foreground"
                   }`
                 }
               >
@@ -113,9 +115,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             <NavLink to="/cart" className="relative mr-2">
               <Button variant="ghost" className="rounded-full p-2">
-                <ShoppingCart className="h-6 w-6 text-gray-600" />
+                <ShoppingCart className="h-5 w-5 text-foreground" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-juicy-orange text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-foreground text-background text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}

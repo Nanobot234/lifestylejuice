@@ -229,23 +229,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      <footer className="bg-gray-50 py-10">
+      <footer className="bg-foreground text-background py-12 mt-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-lg font-bold mb-4">JuiceJoy</h3>
-              <p className="text-gray-600 mb-4">
-                Bringing fresh, nutritious juices to you daily. Made from locally sourced fruits and vegetables.
+              <span className="text-[10px] tracking-[0.25em] text-background/60">EST. 2023</span>
+              <h3 className="font-display text-xl mt-1 mb-3">LIFESTYLE 1104</h3>
+              <p className="text-background/70 mb-4 text-sm leading-relaxed">
+                Cold-pressed juices and handcrafted smoothies — made fresh, made for the way you live.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+              <h3 className="text-xs tracking-[0.25em] uppercase mb-4 text-background/60">Explore</h3>
               <ul className="space-y-2">
                 {navItems.map((item) => (
                   <li key={item.path}>
                     <NavLink 
                       to={item.path} 
-                      className="text-gray-600 hover:text-juicy-green transition-colors"
+                      className="text-background/80 hover:text-background transition-colors text-sm"
                     >
                       {item.label}
                     </NavLink>
@@ -254,7 +255,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <li>
                   <NavLink 
                     to="/cart" 
-                    className="text-gray-600 hover:text-juicy-green transition-colors"
+                    className="text-background/80 hover:text-background transition-colors text-sm"
                   >
                     Cart
                   </NavLink>
@@ -263,7 +264,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <li>
                     <NavLink 
                       to="/my-orders" 
-                      className="text-gray-600 hover:text-juicy-green transition-colors"
+                      className="text-background/80 hover:text-background transition-colors text-sm"
                     >
                       My Orders
                     </NavLink>
@@ -272,15 +273,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-bold mb-4">Contact</h3>
-              <p className="text-gray-600 mb-2">123 Juice Street</p>
-              <p className="text-gray-600 mb-2">Freshville, CA 90210</p>
-              <p className="text-gray-600 mb-2">Phone: (555) 123-4567</p>
-              <p className="text-gray-600">Email: hello@juicejoy.com</p>
+              <h3 className="text-xs tracking-[0.25em] uppercase mb-4 text-background/60">Visit</h3>
+              <p className="text-background/80 mb-2 text-sm">Follow us on Instagram</p>
+              <a href="https://www.instagram.com/lifestyle1104juicebar" target="_blank" rel="noopener noreferrer" className="text-background underline underline-offset-4 text-sm">@lifestyle1104juicebar</a>
             </div>
           </div>
-          <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} JuiceJoy. All rights reserved.</p>
+          <div className="border-t border-background/15 mt-10 pt-6 text-center text-background/50 text-xs tracking-wider">
+            <p>© {new Date().getFullYear()} LIFESTYLE 1104 JUICE BAR</p>
           </div>
         </div>
       </footer>

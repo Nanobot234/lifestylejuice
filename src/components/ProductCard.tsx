@@ -6,7 +6,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
 import { Product } from "@/types";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: Product;
@@ -20,52 +19,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     addToCart(product);
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "green":
-        return "bg-juicy-green text-white";
-      case "berry":
-        return "bg-juicy-purple text-white";
-      case "tropical":
-        return "bg-juicy-yellow text-black";
-      case "veggie":
-        return "bg-juicy-orange text-white";
-      case "citrus":
-        return "bg-amber-400 text-black";
-      case "fruit":
-        return "bg-red-500 text-white";
-      case "protein":
-        return "bg-brown-500 text-white";
-      default:
-        return "bg-gray-500 text-white";
-    }
-  };
-
   return (
-    <Card className={cn("juice-card h-full flex flex-col", className)}>
-      <div className="relative h-48 overflow-hidden rounded-t-xl">
+    <Card className={cn("juice-card h-full flex flex-col group border-0 shadow-none bg-transparent", className)}>
+      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
         />
-        <Badge className={`absolute top-2 right-2 ${getCategoryColor(product.category)}`}>
+        <span className="absolute top-3 left-3 text-[10px] tracking-[0.25em] uppercase bg-background/80 backdrop-blur-sm text-foreground px-3 py-1 rounded-full">
           {product.category}
-        </Badge>
+        </span>
       </div>
-      <CardContent className="pt-4 flex-grow">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-lg text-gray-800">{product.name}</h3>
-          <span className="font-semibold text-juicy-green">${product.price.toFixed(2)}</span>
+      <CardContent className="pt-5 px-1 flex-grow">
+        <div className="flex justify-between items-baseline mb-2 gap-3">
+          <h3 className="font-display text-xl tracking-wide text-foreground">{product.name.toUpperCase()}</h3>
+          <span className="font-medium text-foreground whitespace-nowrap">${product.price.toFixed(2)}</span>
         </div>
-        <p className="text-gray-600 text-sm">{product.description}</p>
+        <p className="text-muted-foreground text-sm leading-relaxed">{product.description}</p>
       </CardContent>
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-4 px-1">
         <Button 
           onClick={handleAddToCart} 
-          className="w-full bg-juicy-green hover:bg-juicy-green/90"
+          className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-full py-6 tracking-[0.15em] text-xs uppercase"
         >
-          <Plus className="mr-2 h-4 w-4" /> Add to Cart
+          <Plus className="mr-2 h-4 w-4" /> Add to Order
         </Button>
       </CardFooter>
     </Card>

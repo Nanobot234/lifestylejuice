@@ -60,6 +60,14 @@ export default {
 					yellow: '#FFEB3B',
 					purple: '#9C27B0',
 				},
+				brand: {
+					cream: 'hsl(var(--brand-cream))',
+					charcoal: 'hsl(var(--brand-charcoal))',
+					strawberry: 'hsl(var(--brand-strawberry))',
+					berry: 'hsl(var(--brand-berry))',
+					carrot: 'hsl(var(--brand-carrot))',
+					peanut: 'hsl(var(--brand-peanut))',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

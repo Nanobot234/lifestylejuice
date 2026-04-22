@@ -85,20 +85,27 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-display {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.08em;
   }
 }
 
 @layer components {
   .juice-card {
-    @apply relative overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-300 bg-white;
+    @apply relative overflow-hidden rounded-2xl transition-all duration-500 bg-card;
   }
 
   .juice-button {
-    @apply px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-md;
+    @apply px-7 py-3 rounded-full font-medium tracking-wide transition-all duration-300;
   }
 }

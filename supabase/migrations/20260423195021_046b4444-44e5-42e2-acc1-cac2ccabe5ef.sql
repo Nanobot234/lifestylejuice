@@ -1,0 +1,1 @@
+UPDATE public.products SET price = 10.00 WHERE category = 'juice';

@@ -1,0 +1,5 @@
+UPDATE public.products SET name = 'Tropical Gains', description = 'A creamy, sun-ripened strawberry smoothie blended with pineapple, banana, honey, coconut water and a scoop of creatine. Sweet, tropical, and built for gains — a feel-good sip with serious purpose.' WHERE id = '7769b7f1-ec22-4d1b-a14a-5534862cd77d';
+
+UPDATE public.products SET name = 'Secure Your Energy', description = 'Cold-pressed carrot, red apple and ginger. Bright, zesty, and naturally energizing — the daily glow-up your skin and immune system will thank you for.' WHERE id = '1d27e431-d9e7-4846-aecf-7fe160154d0b';
+
+UPDATE public.products SET name = '78 Grams', description = 'A rich blend of banana, peanut butter, whey protein, oats, cinnamon, vanilla and almond milk. Creamy, energizing, and protein-packed — perfect post-workout or as a satisfying meal on the go.' WHERE id = 'a4f7fd0f-1218-402a-b957-6d50563d94be';

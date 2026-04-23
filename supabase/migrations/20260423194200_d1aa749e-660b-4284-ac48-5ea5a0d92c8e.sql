@@ -1,0 +1,4 @@
+INSERT INTO public.products (name, description, price, image_url, category) VALUES
+('Now You See Me', 'A vibrant cold-pressed blend of carrot, pineapple, beet, and orange — earthy, sweet, and packed with natural energy. Available in 16oz and 24oz.', 8.00, 'https://iadhangnqjkyyxuerkyc.supabase.co/storage/v1/object/public/product-images/now-you-see-me.jpg', 'juice'),
+('Glow Up Smoothie', 'A tropical green glow-up: mango, pineapple, and spinach blended with coconut water, agave, and collagen powder for skin-loving radiance.', 10.00, 'https://iadhangnqjkyyxuerkyc.supabase.co/storage/v1/object/public/product-images/glow-up.jpg', 'smoothie'),
+('Pink Dragon Smoothie', 'Vivid dragon fruit blended with mango, banana, pineapple, a squeeze of lemon, and creamy oat milk — bright, refreshing, and antioxidant-rich.', 10.00, 'https://iadhangnqjkyyxuerkyc.supabase.co/storage/v1/object/public/product-images/pink-dragon.jpg', 'smoothie');

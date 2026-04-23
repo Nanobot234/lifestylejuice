@@ -1,0 +1,2 @@
+UPDATE public.products SET image_url = 'https://iadhangnqjkyyxuerkyc.supabase.co/storage/v1/object/public/product-images/now-you-see-me.jpg?v=2' WHERE name = 'Now You See Me';
+UPDATE public.products SET image_url = 'https://iadhangnqjkyyxuerkyc.supabase.co/storage/v1/object/public/product-images/pink-dragon.jpg?v=2' WHERE name = 'Pink Dragon Smoothie';

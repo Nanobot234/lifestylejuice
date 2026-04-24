@@ -17,13 +17,13 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const { addToCart } = useCart();
-  const isJuice = product.category === "juice";
+  const hasSizes = product.category === "juice" || product.category === "smoothie";
   const [size, setSize] = useState<JuiceSize>("16oz");
 
-  const displayPrice = isJuice ? product.price + SIZE_UPCHARGE[size] : product.price;
+  const displayPrice = hasSizes ? product.price + SIZE_UPCHARGE[size] : product.price;
 
   const handleAddToCart = () => {
-    if (isJuice) {
+    if (hasSizes) {
       addToCart({
         ...product,
         id: `${product.id}-${size}`,
@@ -53,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
           <span className="font-medium text-foreground whitespace-nowrap">${displayPrice.toFixed(2)}</span>
         </div>
         <p className="text-muted-foreground text-sm leading-relaxed">{product.description}</p>
-        {isJuice && (
+        {hasSizes && (
           <div className="mt-4 flex gap-2">
             {(["16oz", "24oz"] as JuiceSize[]).map((s) => (
               <button

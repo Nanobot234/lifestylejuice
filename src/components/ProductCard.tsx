@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
@@ -10,6 +10,13 @@ import { cn } from "@/lib/utils";
 type JuiceSize = "16oz" | "24oz";
 const SIZE_UPCHARGE: Record<JuiceSize, number> = { "16oz": 0, "24oz": 2 };
 
+const BOWL_TOPPINGS = {
+  Fruit: ["Banana", "Strawberries", "Blueberries", "Mango", "Kiwi", "Raspberries", "Blackberries"],
+  Superfood: ["Chia Seeds", "Flax Seeds", "Hemp Seeds"],
+  Crunch: ["Granola", "Almonds", "Coconut Flakes", "Cacao Nibs", "Chocolate Chips"],
+};
+const BOWL_DRIZZLES = ["Agave", "Almond Butter", "Caramel", "Honey", "Nutella", "Peanut Butter"];
+
 interface ProductCardProps {
   product: Product;
   className?: string;
@@ -18,9 +25,17 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const { addToCart } = useCart();
   const hasSizes = product.category === "juice" || product.category === "smoothie";
+  const isBowl = product.category === "bowl";
   const [size, setSize] = useState<JuiceSize>("16oz");
+  const [toppings, setToppings] = useState<string[]>([]);
+  const [drizzles, setDrizzles] = useState<string[]>([]);
+  const [customizeOpen, setCustomizeOpen] = useState(false);
 
   const displayPrice = hasSizes ? product.price + SIZE_UPCHARGE[size] : product.price;
+
+  const toggle = (list: string[], setList: (v: string[]) => void, item: string) => {
+    setList(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
+  };
 
   const handleAddToCart = () => {
     if (hasSizes) {
@@ -30,6 +45,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         name: `${product.name} (${size})`,
         price: product.price + SIZE_UPCHARGE[size],
       });
+    } else if (isBowl) {
+      const addOns = [...toppings, ...drizzles];
+      const suffix = addOns.length > 0 ? ` + ${addOns.join(", ")}` : "";
+      const idSuffix = addOns.length > 0 ? `-${addOns.join("-").toLowerCase().replace(/\s+/g, "")}` : "";
+      addToCart({
+        ...product,
+        id: `${product.id}${idSuffix}`,
+        name: `${product.name}${suffix}`,
+      });
+      setToppings([]);
+      setDrizzles([]);
+      setCustomizeOpen(false);
     } else {
       addToCart(product);
     }
@@ -70,6 +97,66 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
                 {s}
               </button>
             ))}
+          </div>
+        )}
+        {isBowl && (
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={() => setCustomizeOpen((v) => !v)}
+              className="w-full flex items-center justify-between text-xs tracking-[0.15em] uppercase py-2 px-4 rounded-full border border-border hover:border-foreground transition-colors"
+            >
+              <span>
+                Customize{toppings.length + drizzles.length > 0 ? ` · ${toppings.length + drizzles.length}` : ""}
+              </span>
+              <ChevronDown className={cn("h-4 w-4 transition-transform", customizeOpen && "rotate-180")} />
+            </button>
+            {customizeOpen && (
+              <div className="mt-3 space-y-4">
+                {Object.entries(BOWL_TOPPINGS).map(([group, items]) => (
+                  <div key={group}>
+                    <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-2">{group}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {items.map((item) => (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => toggle(toppings, setToppings, item)}
+                          className={cn(
+                            "text-[11px] px-3 py-1 rounded-full border transition-colors",
+                            toppings.includes(item)
+                              ? "bg-foreground text-background border-foreground"
+                              : "bg-transparent text-foreground border-border hover:border-foreground"
+                          )}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <div>
+                  <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-2">Drizzles</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {BOWL_DRIZZLES.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => toggle(drizzles, setDrizzles, item)}
+                        className={cn(
+                          "text-[11px] px-3 py-1 rounded-full border transition-colors",
+                          drizzles.includes(item)
+                            ? "bg-foreground text-background border-foreground"
+                            : "bg-transparent text-foreground border-border hover:border-foreground"
+                        )}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </CardContent>

@@ -111,7 +111,7 @@ const Index = () => {
             <span className="text-[11px] tracking-[0.35em] text-background/60 uppercase">The Philosophy</span>
             <h2 className="font-display text-4xl md:text-5xl mt-2 mb-6">A LIFESTYLE,<br /><em className="italic font-serif font-normal text-background/80">not a trend.</em></h2>
             <p className="text-background/70 leading-relaxed mb-6">
-              Lifestyle 1104 was built on a simple idea: feeling good shouldn't be complicated. Every cup is crafted with intention — real fruit, real veg, real nutrition.
+              Lifestyle 1104 was built on a simple idea: feeling good shouldn't be complicated. Every cup is crafted with intention — real fruit, real vegetables, real nutrition.
             </p>
             <div className="grid grid-cols-3 gap-6 mt-10">
               <div>

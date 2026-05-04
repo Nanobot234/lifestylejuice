@@ -1,6 +1,6 @@
 import React from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ShoppingCart, Menu as MenuIcon, X, LogIn, User, LogOut } from "lucide-react";
+import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
+import { ShoppingCart, Menu as MenuIcon, X, LogIn, User, LogOut, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -33,6 +33,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: "/contact", label: "Contact" },
   ];
 
+  const menuSubLinks = [
+    { path: "/menu?category=juice", label: "Juices" },
+    { path: "/menu?category=smoothie", label: "Smoothies" },
+    { path: "/menu?category=bowl", label: "Bowls" },
+    { path: "/menu?category=protein", label: "Protein" },
+  ];
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -59,19 +66,50 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `text-xs tracking-[0.2em] uppercase font-medium transition duration-200 hover:text-foreground ${
-                    isActive ? "text-foreground" : "text-muted-foreground"
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `text-xs tracking-[0.2em] uppercase font-medium transition duration-200 hover:text-foreground ${
+                  isActive && location.pathname === "/" ? "text-foreground" : "text-muted-foreground"
+                }`
+              }
+            >
+              Home
+            </NavLink>
+
+            {/* Juice Menu with dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className={`text-xs tracking-[0.2em] uppercase font-medium transition duration-200 hover:text-foreground flex items-center gap-1 ${
+                    location.pathname === "/menu" ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  Juice Menu <ChevronDown className="h-3 w-3" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center">
+                <DropdownMenuItem onClick={() => navigate("/menu")}>
+                  All Products
+                </DropdownMenuItem>
+                {menuSubLinks.map((sub) => (
+                  <DropdownMenuItem key={sub.path} onClick={() => navigate(sub.path)}>
+                    {sub.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                `text-xs tracking-[0.2em] uppercase font-medium transition duration-200 hover:text-foreground ${
+                  isActive ? "text-foreground" : "text-muted-foreground"
+                }`
+              }
+            >
+              Contact
+            </NavLink>
           </nav>
 
           <div className="flex items-center space-x-2">
@@ -141,22 +179,57 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       </Button>
                     </div>
                     <nav className="flex flex-col space-y-4">
-                      {navItems.map((item) => (
-                        <NavLink
-                          key={item.path}
-                          to={item.path}
-                          onClick={() => setIsMenuOpen(false)}
-                          className={({ isActive }) =>
-                            `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
-                              isActive
-                                ? "bg-muted text-foreground font-medium"
-                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                            }`
-                          }
-                        >
-                          {item.label}
-                        </NavLink>
-                      ))}
+                      <NavLink
+                        to="/"
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
+                            isActive && location.pathname === "/"
+                              ? "bg-muted text-foreground font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`
+                        }
+                      >
+                        Home
+                      </NavLink>
+                      <NavLink
+                        to="/menu"
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
+                            isActive
+                              ? "bg-muted text-foreground font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`
+                        }
+                      >
+                        Juice Menu
+                      </NavLink>
+                      <div className="pl-4 flex flex-col space-y-2">
+                        {menuSubLinks.map((sub) => (
+                          <Link
+                            key={sub.path}
+                            to={sub.path}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="px-2 py-1.5 rounded-md tracking-[0.1em] uppercase text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                      <NavLink
+                        to="/contact"
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
+                            isActive
+                              ? "bg-muted text-foreground font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`
+                        }
+                      >
+                        Contact
+                      </NavLink>
                       
                       {isAuthenticated ? (
                         <>

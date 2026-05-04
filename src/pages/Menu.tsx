@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { products as localProducts } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
@@ -9,7 +10,9 @@ import { Search } from "lucide-react";
 import { fetchProducts } from "@/services/productsService";
 
 const Menu = () => {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
+  const initialCategory = searchParams.get("category") || "all";
   const [dbProducts, setDbProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -80,7 +83,7 @@ const Menu = () => {
         {loading ? (
           <div className="text-center py-12">Loading products...</div>
         ) : (
-        <Tabs defaultValue="all" className="w-full">
+        <Tabs defaultValue={initialCategory} className="w-full">
           <div className="flex justify-center mb-8">
             <TabsList className="h-auto p-1">
               {categories.map((category) => (

@@ -52,11 +52,17 @@ const Index = () => {
 
           <div className="order-1 md:order-2 relative">
             <div className="grid grid-cols-2 gap-3">
-              <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
-                <img src={strawberryImg} alt="Strawberry smoothie" className="w-full h-full object-cover" />
+              <div>
+                <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
+                  <img src={strawberryImg} alt="Tropical Gains smoothie" className="w-full h-full object-cover" />
+                </div>
+                <p className="text-center text-xs tracking-[0.2em] uppercase text-muted-foreground mt-3 font-medium">Tropical Gains</p>
               </div>
-              <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted mt-10">
-                <img src={berryImg} alt="Berry smoothie" className="w-full h-full object-cover" />
+              <div className="mt-10">
+                <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
+                  <img src={berryImg} alt="Berry Good Smoothie" className="w-full h-full object-cover" />
+                </div>
+                <p className="text-center text-xs tracking-[0.2em] uppercase text-muted-foreground mt-3 font-medium">Berry Good Smoothie</p>
               </div>
             </div>
             <div className="absolute -bottom-6 -left-4 bg-background border border-border px-5 py-3 rounded-full shadow-sm">
@@ -128,8 +134,11 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="aspect-[4/5] overflow-hidden rounded-2xl">
-            <img src={carrotImg} alt="Carrot Glow juice" className="w-full h-full object-cover" />
+          <div>
+            <div className="aspect-[4/5] overflow-hidden rounded-2xl">
+              <img src={carrotImg} alt="Secure Your Energy juice" className="w-full h-full object-cover" />
+            </div>
+            <p className="text-center text-xs tracking-[0.2em] uppercase text-background/60 mt-3 font-medium">Secure Your Energy</p>
           </div>
         </div>
       </section>

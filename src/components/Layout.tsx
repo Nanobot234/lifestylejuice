@@ -179,22 +179,57 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       </Button>
                     </div>
                     <nav className="flex flex-col space-y-4">
-                      {navItems.map((item) => (
-                        <NavLink
-                          key={item.path}
-                          to={item.path}
-                          onClick={() => setIsMenuOpen(false)}
-                          className={({ isActive }) =>
-                            `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
-                              isActive
-                                ? "bg-muted text-foreground font-medium"
-                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                            }`
-                          }
-                        >
-                          {item.label}
-                        </NavLink>
-                      ))}
+                      <NavLink
+                        to="/"
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
+                            isActive && location.pathname === "/"
+                              ? "bg-muted text-foreground font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`
+                        }
+                      >
+                        Home
+                      </NavLink>
+                      <NavLink
+                        to="/menu"
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
+                            isActive
+                              ? "bg-muted text-foreground font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`
+                        }
+                      >
+                        Juice Menu
+                      </NavLink>
+                      <div className="pl-4 flex flex-col space-y-2">
+                        {menuSubLinks.map((sub) => (
+                          <Link
+                            key={sub.path}
+                            to={sub.path}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="px-2 py-1.5 rounded-md tracking-[0.1em] uppercase text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                      <NavLink
+                        to="/contact"
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
+                            isActive
+                              ? "bg-muted text-foreground font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`
+                        }
+                      >
+                        Contact
+                      </NavLink>
                       
                       {isAuthenticated ? (
                         <>

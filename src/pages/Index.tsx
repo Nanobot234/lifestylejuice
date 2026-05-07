@@ -13,9 +13,15 @@ import carrotImg from "@/assets/juice-carrot.jpg";
 const Index = () => {
   const navigate = useNavigate();
   const [featured, setFeatured] = useState<Product[]>([]);
+  const [featuredBowls, setFeaturedBowls] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetchProducts().then((p) => setFeatured(p.slice(0, 3)));
+    fetchProducts().then((p) => {
+      const smoothies = p.filter((item) => item.category !== "bowl");
+      const bowls = p.filter((item) => item.category === "bowl");
+      setFeatured(smoothies.slice(0, 3));
+      setFeaturedBowls(bowls.slice(0, 3));
+    });
   }, []);
 
   return (
@@ -104,6 +110,33 @@ const Index = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {featured.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Signature Bowls */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">The Lineup</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">SIGNATURE BOWLS</h2>
+          </div>
+          <Button
+            onClick={() => navigate("/menu")}
+            variant="ghost"
+            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+          >
+            View Full Menu <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+
+        {featuredBowls.length === 0 ? (
+          <div className="text-center text-muted-foreground py-12">Loading bowls…</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {featuredBowls.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>

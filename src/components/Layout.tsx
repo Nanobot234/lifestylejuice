@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import logo from "@/assets/logo.png";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,7 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navItems = [
     { path: "/", label: "Home" },
-    { path: "/menu", label: "Juice Menu" },
+    { path: "/menu", label: "Menu" },
     { path: "/contact", label: "Contact" },
   ];
 
@@ -57,10 +58,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <header className="sticky top-0 z-50 bg-background/85 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 py-5 flex justify-between items-center">
           <div className="flex items-center">
-            <NavLink to="/" className="flex flex-col items-start leading-none">
-              <span className="text-[10px] tracking-[0.25em] text-muted-foreground">EST. 2023</span>
-              <span className="font-display text-2xl md:text-3xl text-foreground">LIFESTYLE 1104</span>
-              <span className="text-[10px] tracking-[0.35em] text-muted-foreground">JUICE BAR</span>
+            <NavLink to="/" className="flex items-center leading-none" aria-label="Lifestyle 1104 Juice Bar">
+              <img src={logo} alt="Lifestyle 1104 Juice Bar" className="h-12 md:h-14 w-auto" />
             </NavLink>
           </div>
 
@@ -85,7 +84,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     location.pathname === "/menu" ? "text-foreground" : "text-muted-foreground"
                   }`}
                 >
-                  Juice Menu <ChevronDown className="h-3 w-3" />
+                  Menu <ChevronDown className="h-3 w-3" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center">
@@ -203,7 +202,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                           }`
                         }
                       >
-                        Juice Menu
+                        Menu
                       </NavLink>
                       <div className="pl-4 flex flex-col space-y-2">
                         {menuSubLinks.map((sub) => (

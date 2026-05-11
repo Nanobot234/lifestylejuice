@@ -8,7 +8,6 @@ import { fetchProducts } from "@/services/productsService";
 import { Product } from "@/types";
 import strawberryImg from "@/assets/juice-strawberry.jpg";
 import berryImg from "@/assets/juice-berry.jpg";
-import carrotImg from "@/assets/juice-carrot.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -168,10 +167,34 @@ const Index = () => {
             </div>
           </div>
           <div>
-            <div className="aspect-[4/5] overflow-hidden rounded-2xl">
-              <img src={carrotImg} alt="Secure Your Energy juice" className="w-full h-full object-cover" />
+            <span className="text-[11px] tracking-[0.35em] text-background/60 uppercase">Why It Matters</span>
+            <h3 className="font-display text-3xl md:text-4xl mt-2 mb-8">REAL FOOD.<br />REAL RESULTS.</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-background/5 border border-background/15 p-6 rounded-2xl">
+                <h4 className="font-display text-base mb-2 tracking-wide">ENERGY</h4>
+                <p className="text-background/70 text-sm leading-relaxed">
+                  Fresh juices provide an instant boost of vitamins and minerals that help fight fatigue and increase your energy levels naturally.
+                </p>
+              </div>
+              <div className="bg-background/5 border border-background/15 p-6 rounded-2xl">
+                <h4 className="font-display text-base mb-2 tracking-wide">DIGESTION</h4>
+                <p className="text-background/70 text-sm leading-relaxed">
+                  The enzymes in fresh juice aid digestion and help your body absorb nutrients more effectively.
+                </p>
+              </div>
+              <div className="bg-background/5 border border-background/15 p-6 rounded-2xl">
+                <h4 className="font-display text-base mb-2 tracking-wide">GLOW</h4>
+                <p className="text-background/70 text-sm leading-relaxed">
+                  Antioxidants in fresh juices help combat free radicals, leading to clearer, more radiant skin.
+                </p>
+              </div>
+              <div className="bg-background/5 border border-background/15 p-6 rounded-2xl">
+                <h4 className="font-display text-base mb-2 tracking-wide">IMMUNITY</h4>
+                <p className="text-background/70 text-sm leading-relaxed">
+                  Regular consumption of fresh juices strengthens your immune system and helps your body fight off illnesses.
+                </p>
+              </div>
             </div>
-            <p className="text-center text-xs tracking-[0.2em] uppercase text-background/60 mt-3 font-medium">Secure Your Energy</p>
           </div>
         </div>
       </section>

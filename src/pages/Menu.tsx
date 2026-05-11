@@ -117,46 +117,6 @@ const Menu = () => {
         </Tabs>
         )}
       </section>
-
-      {/* Benefits Section */}
-      <section className="bg-muted/40 py-20 border-t border-border">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-14">
-            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Why It Matters</span>
-            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">REAL FOOD. REAL RESULTS.</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div className="bg-background p-8 rounded-2xl border border-border">
-              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">ENERGY</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Fresh juices provide an instant boost of vitamins and minerals that help fight fatigue and increase your energy levels naturally.
-              </p>
-            </div>
-
-            <div className="bg-background p-8 rounded-2xl border border-border">
-              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">DIGESTION</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                The enzymes in fresh juice aid digestion and help your body absorb nutrients more effectively.
-              </p>
-            </div>
-
-            <div className="bg-background p-8 rounded-2xl border border-border">
-              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">GLOW</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Antioxidants in fresh juices help combat free radicals, leading to clearer, more radiant skin.
-              </p>
-            </div>
-
-            <div className="bg-background p-8 rounded-2xl border border-border">
-              <h3 className="font-display text-lg mb-3 text-foreground tracking-wide">IMMUNITY</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Regular consumption of fresh juices strengthens your immune system and helps your body fight off illnesses.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 };

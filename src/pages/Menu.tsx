@@ -105,6 +105,33 @@ const Menu = () => {
                   <h3 className="text-2xl font-semibold mb-2">No juices found</h3>
                   <p className="text-gray-500">Try a different search term</p>
                 </div>
+              ) : category === "all" ? (
+                <div className="space-y-16">
+                  {categories
+                    .filter((c) => c !== "all")
+                    .map((c) => {
+                      const items = getCategoryProducts(c);
+                      if (items.length === 0) return null;
+                      return (
+                        <div key={c}>
+                          <div className="mb-8 flex items-end justify-between gap-4 border-b border-border pb-4">
+                            <h2 className="font-display text-3xl md:text-4xl tracking-wide text-foreground uppercase">
+                              {c}
+                              {c.toLowerCase().endsWith("s") ? "" : "s"}
+                            </h2>
+                            <span className="text-[11px] tracking-[0.3em] uppercase text-muted-foreground">
+                              {items.length} {items.length === 1 ? "item" : "items"}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {items.map((product) => (
+                              <ProductCard key={product.id} product={product} />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {getCategoryProducts(category).map((product) => (

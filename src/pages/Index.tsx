@@ -6,8 +6,7 @@ import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
 import { fetchProducts } from "@/services/productsService";
 import { Product } from "@/types";
-import strawberryImg from "@/assets/juice-strawberry.jpg";
-import berryImg from "@/assets/juice-berry.jpg";
+import allSmoothiesImg from "@/assets/all-smoothies.jpeg";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -56,19 +55,8 @@ const Index = () => {
           </div>
 
           <div className="order-1 md:order-2 relative">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
-                  <img src={strawberryImg} alt="Tropical Gains smoothie" className="w-full h-full object-cover" />
-                </div>
-                <p className="text-center text-xs tracking-[0.2em] uppercase text-muted-foreground mt-3 font-medium">Tropical Gains</p>
-              </div>
-              <div className="mt-10">
-                <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
-                  <img src={berryImg} alt="Berry Good Smoothie" className="w-full h-full object-cover" />
-                </div>
-                <p className="text-center text-xs tracking-[0.2em] uppercase text-muted-foreground mt-3 font-medium">Berry Good Smoothie</p>
-              </div>
+            <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
+              <img src={allSmoothiesImg} alt="Lifestyle 1104 signature smoothie lineup" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -bottom-6 -left-4 bg-background border border-border px-5 py-3 rounded-full shadow-sm">
               <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">100% Real</span>

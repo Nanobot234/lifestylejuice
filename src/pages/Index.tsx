@@ -10,6 +10,8 @@ import { useCart } from "@/context/CartContext";
 import allSmoothiesImg from "@/assets/all-smoothies.jpeg";
 import proteinBitesCoconut from "@/assets/protein-bites-coconut.jpg";
 import proteinBitesChocolate from "@/assets/protein-bites-chocolate.jpg";
+import toastAvocadoImg from "@/assets/toast-avocado.jpg";
+import toastPbBerryImg from "@/assets/toast-pb-berry.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -17,15 +19,18 @@ const Index = () => {
   const [featured, setFeatured] = useState<Product[]>([]);
   const [featuredBowls, setFeaturedBowls] = useState<Product[]>([]);
   const [proteinBites, setProteinBites] = useState<Product[]>([]);
+  const [toasts, setToasts] = useState<Product[]>([]);
 
   useEffect(() => {
     fetchProducts().then((p) => {
-      const smoothies = p.filter((item) => item.category !== "bowl" && item.category !== "protein-bite");
+      const smoothies = p.filter((item) => item.category?.includes("smoothie"));
       const bowls = p.filter((item) => item.category === "bowl");
       const bites = p.filter((item) => item.category === "protein-bite");
+      const toastItems = p.filter((item) => item.category === "toast");
       setFeatured(smoothies.slice(0, 3));
       setFeaturedBowls(bowls.slice(0, 3));
       setProteinBites(bites);
+      setToasts(toastItems);
     });
   }, []);
 
@@ -184,6 +189,32 @@ const Index = () => {
             <div className="space-y-5">
               {coconutBites.map(renderBiteOption)}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Toasts */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Fresh Off The Press</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">TOASTS</h2>
+            <p className="text-muted-foreground text-sm mt-3 max-w-md">Crisp, fresh, and loaded — sweet or savory.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={toastAvocadoImg} alt="Avocado toast with spinach and balsamic glaze" className="w-full h-full object-cover" />
+            </div>
+            {toasts.filter((t) => t.name.toLowerCase().includes("avocado")).map(renderBiteOption)}
+          </div>
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={toastPbBerryImg} alt="Peanut butter and berry toast with almonds" className="w-full h-full object-cover" />
+            </div>
+            {toasts.filter((t) => !t.name.toLowerCase().includes("avocado")).map(renderBiteOption)}
           </div>
         </div>
       </section>

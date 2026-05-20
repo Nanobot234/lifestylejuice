@@ -12,6 +12,9 @@ import proteinBitesCoconut from "@/assets/protein-bites-coconut.jpg";
 import proteinBitesChocolate from "@/assets/protein-bites-chocolate.jpg";
 import toastAvocadoImg from "@/assets/toast-avocado.jpg";
 import toastPbBerryImg from "@/assets/toast-pb-berry.jpg";
+import cpJustBeetIt from "@/assets/cp-just-beet-it.jpg";
+import cpSnatchedAf from "@/assets/cp-snatched-af.jpg";
+import cpBlueMajik from "@/assets/cp-blue-majik.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -20,17 +23,20 @@ const Index = () => {
   const [featuredBowls, setFeaturedBowls] = useState<Product[]>([]);
   const [proteinBites, setProteinBites] = useState<Product[]>([]);
   const [toasts, setToasts] = useState<Product[]>([]);
+  const [coldPressed, setColdPressed] = useState<Product[]>([]);
 
   useEffect(() => {
     fetchProducts().then((p) => {
-      const smoothies = p.filter((item) => item.category?.includes("smoothie"));
+      const blends = p.filter((item) => item.category?.includes("blend"));
       const bowls = p.filter((item) => item.category === "bowl");
       const bites = p.filter((item) => item.category === "protein-bite");
       const toastItems = p.filter((item) => item.category === "toast");
-      setFeatured(smoothies.slice(0, 3));
+      const cp = p.filter((item) => item.category === "cold-pressed juice");
+      setFeatured(blends.slice(0, 3));
       setFeaturedBowls(bowls.slice(0, 3));
       setProteinBites(bites);
       setToasts(toastItems);
+      setColdPressed(cp);
     });
   }, []);
 

@@ -1,26 +1,54 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Leaf, Sparkles, Heart } from "lucide-react";
+import { ArrowRight, Leaf, Sparkles, Heart, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
 import { fetchProducts } from "@/services/productsService";
 import { Product } from "@/types";
+import { useCart } from "@/context/CartContext";
 import allSmoothiesImg from "@/assets/all-smoothies.jpeg";
+import proteinBitesCoconut from "@/assets/protein-bites-coconut.jpg";
+import proteinBitesChocolate from "@/assets/protein-bites-chocolate.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const [featured, setFeatured] = useState<Product[]>([]);
   const [featuredBowls, setFeaturedBowls] = useState<Product[]>([]);
+  const [proteinBites, setProteinBites] = useState<Product[]>([]);
 
   useEffect(() => {
     fetchProducts().then((p) => {
-      const smoothies = p.filter((item) => item.category !== "bowl");
+      const smoothies = p.filter((item) => item.category !== "bowl" && item.category !== "protein-bite");
       const bowls = p.filter((item) => item.category === "bowl");
+      const bites = p.filter((item) => item.category === "protein-bite");
       setFeatured(smoothies.slice(0, 3));
       setFeaturedBowls(bowls.slice(0, 3));
+      setProteinBites(bites);
     });
   }, []);
+
+  const coconutBites = proteinBites.filter((b) => b.name.toLowerCase().includes("coconut"));
+  const chocolateBites = proteinBites.filter((b) => b.name.toLowerCase().includes("chocolate"));
+
+  const renderBiteOption = (p: Product) => (
+    <div key={p.id} className="flex items-start justify-between gap-4 border-t border-border pt-4">
+      <div className="flex-1">
+        <div className="flex justify-between items-baseline gap-3 mb-1">
+          <h4 className="font-display text-base tracking-wide text-foreground uppercase">{p.name}</h4>
+          <span className="font-medium text-foreground whitespace-nowrap text-sm">${p.price.toFixed(2)}</span>
+        </div>
+        <p className="text-muted-foreground text-xs leading-relaxed mb-3">{p.description}</p>
+        <Button
+          onClick={() => addToCart(p)}
+          className="bg-foreground text-background hover:bg-foreground/90 rounded-full py-5 px-5 tracking-[0.15em] text-[10px] uppercase"
+        >
+          <Plus className="mr-2 h-3 w-3" /> Add to Order
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
     <Layout>
@@ -128,6 +156,36 @@ const Index = () => {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Protein Bites */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Pickup Only</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">PROTEIN BITES</h2>
+            <p className="text-muted-foreground text-sm mt-3 max-w-md">Bite-sized fuel. Pick your flavor — whey or plant-based.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={proteinBitesChocolate} alt="Chocolate chip protein bites" className="w-full h-full object-cover" />
+            </div>
+            <div className="space-y-5">
+              {chocolateBites.map(renderBiteOption)}
+            </div>
+          </div>
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={proteinBitesCoconut} alt="Coconut protein bites" className="w-full h-full object-cover" />
+            </div>
+            <div className="space-y-5">
+              {coconutBites.map(renderBiteOption)}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Philosophy */}

@@ -24,7 +24,11 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const { addToCart } = useCart();
-  const hasSizes = product.category === "juice" || product.category === "smoothie";
+  const hasSizes =
+    product.category === "fresh juice" ||
+    product.category === "cold-pressed juice" ||
+    product.category === "superfood blend" ||
+    product.category === "protein blend";
   const isBowl = product.category === "bowl";
   const [size, setSize] = useState<JuiceSize>("16oz");
   const [toppings, setToppings] = useState<string[]>([]);

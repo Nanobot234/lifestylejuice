@@ -158,6 +158,36 @@ const Index = () => {
         )}
       </section>
 
+      {/* Protein Bites */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Pickup Only</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">PROTEIN BITES</h2>
+            <p className="text-muted-foreground text-sm mt-3 max-w-md">Bite-sized fuel. Pick your flavor — whey or plant-based.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={proteinBitesChocolate} alt="Chocolate chip protein bites" className="w-full h-full object-cover" />
+            </div>
+            <div className="space-y-5">
+              {chocolateBites.map(renderBiteOption)}
+            </div>
+          </div>
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={proteinBitesCoconut} alt="Coconut protein bites" className="w-full h-full object-cover" />
+            </div>
+            <div className="space-y-5">
+              {coconutBites.map(renderBiteOption)}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Philosophy */}
       <section className="bg-foreground text-background py-20">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">

@@ -193,6 +193,32 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Toasts */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Fresh Off The Press</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">TOASTS</h2>
+            <p className="text-muted-foreground text-sm mt-3 max-w-md">Crisp, fresh, and loaded — sweet or savory.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={toastAvocadoImg} alt="Avocado toast with spinach and balsamic glaze" className="w-full h-full object-cover" />
+            </div>
+            {toasts.filter((t) => t.name.toLowerCase().includes("avocado")).map(renderBiteOption)}
+          </div>
+          <div>
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
+              <img src={toastPbBerryImg} alt="Peanut butter and berry toast with almonds" className="w-full h-full object-cover" />
+            </div>
+            {toasts.filter((t) => !t.name.toLowerCase().includes("avocado")).map(renderBiteOption)}
+          </div>
+        </div>
+      </section>
+
       {/* Philosophy */}
       <section className="bg-foreground text-background py-20">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">

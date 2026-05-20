@@ -225,6 +225,36 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Cold-Pressed Juices */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Bottled Daily</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">COLD-PRESSED</h2>
+            <p className="text-muted-foreground text-sm mt-3 max-w-md">
+              Numbered, small-batch, never heated. Grab-and-go bottles, made fresh every morning.
+            </p>
+          </div>
+          <Button
+            onClick={() => navigate("/menu?category=cold-pressed%20juice")}
+            variant="ghost"
+            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+          >
+            View All Bottles <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+
+        {coldPressed.length === 0 ? (
+          <div className="text-center text-muted-foreground py-12">Loading…</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {coldPressed.slice(0, 3).map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
+      </section>
+
       {/* Philosophy */}
       <section className="bg-foreground text-background py-20">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">

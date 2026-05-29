@@ -96,6 +96,7 @@ export type Database = {
           description: string | null
           id: string
           image_url: string | null
+          is_shippable: boolean
           name: string
           price: number
           updated_at: string
@@ -106,6 +107,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          is_shippable?: boolean
           name: string
           price: number
           updated_at?: string
@@ -116,6 +118,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          is_shippable?: boolean
           name?: string
           price?: number
           updated_at?: string

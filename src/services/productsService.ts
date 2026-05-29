@@ -2,6 +2,22 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types";
 
+// Resolve "/src/assets/foo.jpg" paths stored in the DB to bundled asset URLs.
+const assetModules = import.meta.glob("/src/assets/*", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+function resolveImage(url: string | null | undefined): string {
+  if (!url) return "";
+  if (url.startsWith("http") || url.startsWith("data:")) return url;
+  if (url.startsWith("/src/assets/")) {
+    return assetModules[url] ?? url;
+  }
+  return url;
+}
+
 /**
  * Fetch all products from Supabase
  */
@@ -22,7 +38,7 @@ export async function fetchProducts(): Promise<Product[]> {
     name: row.name,
     description: row.description ?? "",
     price: parseFloat(row.price.toString()), // Convert price to number
-    image: row.image_url ?? "",
+    image: resolveImage(row.image_url),
     category: row.category ?? "other",
     ingredients: [], // Could be extended in schema
     benefits: [], // Could be extended in schema

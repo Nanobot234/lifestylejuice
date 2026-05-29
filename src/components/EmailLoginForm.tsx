@@ -11,14 +11,14 @@ import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  email: z.string().trim().toLowerCase().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 const signupSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  confirmPassword: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  email: z.string().trim().toLowerCase().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(1, { message: "Password is required" }),
+  confirmPassword: z.string().min(1, { message: "Please confirm your password" }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
@@ -51,7 +51,7 @@ const EmailLoginForm = () => {
 
   const handleLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
     setError(null);
-    const success = await loginWithEmail(values.email, values.password);
+    const success = await loginWithEmail(values.email.trim().toLowerCase(), values.password);
     if (!success) {
       setError("Invalid email or password");
     }
@@ -59,7 +59,7 @@ const EmailLoginForm = () => {
 
   const handleSignupSubmit = async (values: z.infer<typeof signupSchema>) => {
     setError(null);
-    const success = await signupWithEmail(values.email, values.password);
+    const success = await signupWithEmail(values.email.trim().toLowerCase(), values.password);
     if (!success) {
       setError("Failed to create account. This email might already be in use.");
     }

@@ -89,7 +89,14 @@ export const signupWithEmail = async (
 ): Promise<boolean> => {
   setIsLoading(true);
   try {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const normalizedEmail = email.trim().toLowerCase();
+    const { data, error } = await supabase.auth.signUp({
+      email: normalizedEmail,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
     if (error) {
       toast.error(error.message);
       return false;
@@ -184,7 +191,7 @@ export const loginWithEmail = async (
   setIsLoading(true);
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim().toLowerCase(),
       password
     });
     if (error) {

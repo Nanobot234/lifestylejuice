@@ -8,6 +8,7 @@ export interface Product {
   category: string;
   ingredients: string[];
   benefits: string[];
+  isShippable?: boolean;
 }
 
 export interface CartItem extends Product {

@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { createOrder } from "@/services/ordersService";
+import { OrderDetails } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -11,15 +14,47 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { clearCart } = useCart();
+  const { currentUser, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
-    // Clear cart after successful payment
-    clearCart();
-    toast.success("Payment successful! Your order has been received.");
-    setIsLoading(false);
-  }, [clearCart]);
+    if (authLoading) return;
+
+    const finalize = async () => {
+      try {
+        const orderDetailsStr = sessionStorage.getItem("orderDetails");
+        const orderItemsStr = sessionStorage.getItem("orderItems");
+        const orderTotalStr = sessionStorage.getItem("orderTotal");
+
+        if (isAuthenticated && currentUser && orderDetailsStr && orderItemsStr && orderTotalStr) {
+          const orderDetails: OrderDetails = JSON.parse(orderDetailsStr);
+          const orderItems = JSON.parse(orderItemsStr);
+          const orderTotal = parseFloat(orderTotalStr);
+
+          const created = await createOrder(currentUser.id, orderItems, orderDetails, orderTotal);
+          if (created) {
+            toast.success("Payment successful! Your order has been received.");
+            sessionStorage.removeItem("orderDetails");
+            sessionStorage.removeItem("orderItems");
+            sessionStorage.removeItem("orderTotal");
+          } else {
+            toast.error("Payment received, but we couldn't save your order. Please contact support.");
+          }
+        } else {
+          toast.success("Payment successful! Your order has been received.");
+        }
+        clearCart();
+      } catch (e) {
+        console.error("Error finalizing order:", e);
+        toast.error("Payment received, but there was an issue saving your order.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    finalize();
+  }, [clearCart, isAuthenticated, currentUser, authLoading]);
 
   if (isLoading) {
     return (

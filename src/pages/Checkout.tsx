@@ -147,6 +147,11 @@ const Checkout = () => {
           : 0;
       const totalWithFees = subtotal + tax + localDeliveryFee + shippingFee;
       
+      // Persist order info so we can create the order record after Stripe returns
+      sessionStorage.setItem("orderDetails", JSON.stringify(orderDetails));
+      sessionStorage.setItem("orderItems", JSON.stringify(cartItems));
+      sessionStorage.setItem("orderTotal", String(totalWithFees));
+
       // Create Stripe payment session
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: {

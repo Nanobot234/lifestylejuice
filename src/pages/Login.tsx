@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layout from "@/components/Layout";
 import EmailLoginForm from "@/components/EmailLoginForm";
-import BusinessLoginForm from "@/components/BusinessLoginForm";
 import PhoneLoginForm from "@/components/PhoneLoginForm";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -12,7 +11,6 @@ import { toast } from "sonner";
 const Login = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isBusinessOwner, currentUser, isLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState("customer");
   const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
@@ -32,35 +30,21 @@ const Login = () => {
     }
   }, [isAuthenticated, isBusinessOwner, navigate, currentUser, isLoading, redirecting]);
 
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-  };
-
   return (
     <Layout>
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
-          <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="customer">Customer</TabsTrigger>
-              <TabsTrigger value="business">Business Owner</TabsTrigger>
+          <h1 className="text-2xl font-bold mb-6 text-center">Sign in</h1>
+          <Tabs defaultValue="email" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-4">
+              <TabsTrigger value="email">Email</TabsTrigger>
+              <TabsTrigger value="phone">Phone</TabsTrigger>
             </TabsList>
-            <TabsContent value="customer">
-              <Tabs defaultValue="email" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="email">Email</TabsTrigger>
-                  <TabsTrigger value="phone">Phone</TabsTrigger>
-                </TabsList>
-                <TabsContent value="email">
-                  <EmailLoginForm />
-                </TabsContent>
-                <TabsContent value="phone">
-                  <PhoneLoginForm />
-                </TabsContent>
-              </Tabs>
+            <TabsContent value="email">
+              <EmailLoginForm />
             </TabsContent>
-            <TabsContent value="business">
-              <BusinessLoginForm />
+            <TabsContent value="phone">
+              <PhoneLoginForm />
             </TabsContent>
           </Tabs>
         </div>

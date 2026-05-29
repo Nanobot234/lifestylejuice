@@ -26,8 +26,8 @@ const readFormValue = (formData: FormData, key: string) => {
   return typeof value === "string" ? value : "";
 };
 
-const getFirstError = (result: z.SafeParseError<unknown>) =>
-  result.error.issues[0]?.message || "Please check your email and password.";
+const getFirstError = (error: z.ZodError) =>
+  error.issues[0]?.message || "Please check your email and password.";
 
 const EmailLoginForm = () => {
   const { loginWithEmail, signupWithEmail, isLoading } = useAuth();
@@ -45,7 +45,7 @@ const EmailLoginForm = () => {
     });
 
     if (!parsed.success) {
-      setError(getFirstError(parsed));
+      setError(getFirstError(parsed.error));
       return;
     }
 
@@ -66,7 +66,7 @@ const EmailLoginForm = () => {
     });
 
     if (!parsed.success) {
-      setError(getFirstError(parsed));
+      setError(getFirstError(parsed.error));
       return;
     }
 

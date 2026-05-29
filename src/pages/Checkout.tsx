@@ -34,6 +34,21 @@ import { DeliveryMethod, PaymentMethod } from "@/types";
 import { toast } from "sonner";
 import { calculateShipping, hasShippableItems, US_STATES } from "@/lib/shipping";
 
+const PICKUP_LOCATIONS = [
+  {
+    id: "bronx",
+    label: "Bronx",
+    address: "6 E. 167th St., Bronx, NY",
+    mapsUrl: "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent("6 E. 167th St., Bronx, NY"),
+  },
+  {
+    id: "manhattan",
+    label: "Manhattan",
+    address: "411 W. 35th St., New York, NY",
+    mapsUrl: "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent("411 W. 35th St., New York, NY"),
+  },
+];
+
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   phone: z.string().min(10, "Valid phone number is required"),
@@ -43,6 +58,7 @@ const formSchema = z.object({
   state: z.string().optional(),
   zip: z.string().optional(),
   deliveryMethod: z.enum(["pickup", "delivery", "shipping"]),
+  pickupLocation: z.string().optional(),
   paymentMethod: z.enum(["card"]), // Only card payments through Stripe
   notes: z.string().optional(),
 });
@@ -73,6 +89,7 @@ const Checkout = () => {
       state: "",
       zip: "",
       deliveryMethod: cartHasShippable ? "shipping" : "pickup",
+      pickupLocation: "bronx",
       paymentMethod: "card",
       notes: "",
     },
@@ -80,6 +97,8 @@ const Checkout = () => {
 
   const deliveryMethod = form.watch("deliveryMethod");
   const shipState = form.watch("state");
+  const pickupLocationId = form.watch("pickupLocation");
+  const selectedPickup = PICKUP_LOCATIONS.find((l) => l.id === pickupLocationId);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
@@ -98,6 +117,11 @@ const Checkout = () => {
           return;
         }
       }
+      if (values.deliveryMethod === "pickup" && !values.pickupLocation) {
+        toast.error("Please select a pickup location");
+        setIsSubmitting(false);
+        return;
+      }
       
       const orderDetails = {
         name: values.name,
@@ -106,6 +130,8 @@ const Checkout = () => {
         address:
           values.deliveryMethod === "shipping"
             ? `${values.address}, ${values.city}, ${values.state} ${values.zip}`
+            : values.deliveryMethod === "pickup"
+            ? PICKUP_LOCATIONS.find((l) => l.id === values.pickupLocation)?.address
             : values.address,
         deliveryMethod: values.deliveryMethod as DeliveryMethod,
         paymentMethod: values.paymentMethod as PaymentMethod,

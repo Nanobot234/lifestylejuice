@@ -18,7 +18,6 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import BusinessDashboard from "./pages/BusinessDashboard";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
-import DebugImages from "./pages/DebugImages";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +42,6 @@ function App() {
                 <Route path="/customer-dashboard" element={<CustomerDashboard />} />
                 <Route path="/business-dashboard" element={<BusinessDashboard />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/debug-images" element={<DebugImages />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

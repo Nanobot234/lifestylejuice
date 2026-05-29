@@ -25,7 +25,7 @@ const Login = () => {
       } else {
         console.log("Redirecting customer to dashboard", currentUser);
         toast.success("Welcome back!");
-        navigate("/customer-dashboard");
+        navigate("/my-orders");
       }
     }
   }, [isAuthenticated, isBusinessOwner, navigate, currentUser, isLoading, redirecting]);

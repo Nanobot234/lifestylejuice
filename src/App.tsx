@@ -18,6 +18,7 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import BusinessDashboard from "./pages/BusinessDashboard";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import DebugImages from "./pages/DebugImages";
 
 const queryClient = new QueryClient();
 

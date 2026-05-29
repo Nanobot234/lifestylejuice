@@ -2,11 +2,8 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useAuth } from "@/context/AuthContext";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -24,42 +21,56 @@ const signupSchema = z.object({
   path: ["confirmPassword"],
 });
 
+const readFormValue = (formData: FormData, key: string) => {
+  const value = formData.get(key);
+  return typeof value === "string" ? value : "";
+};
+
+const getFirstError = (error: z.ZodError) =>
+  error.issues[0]?.message || "Please check your email and password.";
+
 const EmailLoginForm = () => {
   const { loginWithEmail, signupWithEmail, isLoading } = useAuth();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Login form
-  const loginForm = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    }
-  });
-
-  // Signup form
-  const signupForm = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
-    }
-  });
-
-  const handleLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
+  const handleLoginSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError(null);
-    const success = await loginWithEmail(values.email.trim().toLowerCase(), values.password);
+    const formData = new FormData(event.currentTarget);
+    const parsed = loginSchema.safeParse({
+      email: readFormValue(formData, "email"),
+      password: readFormValue(formData, "password"),
+    });
+
+    if (!parsed.success) {
+      setError(getFirstError(parsed.error));
+      return;
+    }
+
+    const success = await loginWithEmail(parsed.data.email, parsed.data.password);
     if (!success) {
       setError("Invalid email or password");
     }
   };
 
-  const handleSignupSubmit = async (values: z.infer<typeof signupSchema>) => {
+  const handleSignupSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError(null);
-    const success = await signupWithEmail(values.email.trim().toLowerCase(), values.password);
+    const formData = new FormData(event.currentTarget);
+    const parsed = signupSchema.safeParse({
+      email: readFormValue(formData, "email"),
+      password: readFormValue(formData, "password"),
+      confirmPassword: readFormValue(formData, "confirmPassword"),
+    });
+
+    if (!parsed.success) {
+      setError(getFirstError(parsed.error));
+      return;
+    }
+
+    const success = await signupWithEmail(parsed.data.email, parsed.data.password);
     if (!success) {
       setError("Failed to create account. This email might already be in use.");
     }
@@ -77,8 +88,8 @@ const EmailLoginForm = () => {
   return (
     <div className="w-full max-w-md space-y-6">
       {mode === "login" ? (
-        <Form {...loginForm}>
-          <form onSubmit={loginForm.handleSubmit(handleLoginSubmit)} className="space-y-4">
+        <>
+          <form onSubmit={handleLoginSubmit} className="space-y-4" noValidate>
             <h2 className="text-2xl font-bold text-center">Login</h2>
             
             {error && (
@@ -87,61 +98,44 @@ const EmailLoginForm = () => {
               </Alert>
             )}
             
-            <FormField
-              control={loginForm.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="your.email@example.com" 
-                      type="email"
-                      {...field} 
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none" htmlFor="login-email">Email</label>
+              <Input
+                id="login-email"
+                name="email"
+                placeholder="your.email@example.com"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                disabled={isLoading}
+                onInput={() => setError(null)}
+              />
+            </div>
             
-            <FormField
-              control={loginForm.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input 
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-full px-3 py-2"
-                        onClick={togglePasswordVisibility}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                        <span className="sr-only">
-                          {showPassword ? "Hide password" : "Show password"}
-                        </span>
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none" htmlFor="login-password">Password</label>
+              <div className="relative">
+                <Input
+                  id="login-password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  disabled={isLoading}
+                  onInput={() => setError(null)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3 py-2"
+                  onClick={togglePasswordVisibility}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
             
             <Button 
               type="submit" 
@@ -167,10 +161,10 @@ const EmailLoginForm = () => {
               </Button>
             </p>
           </div>
-        </Form>
+        </>
       ) : (
-        <Form {...signupForm}>
-          <form onSubmit={signupForm.handleSubmit(handleSignupSubmit)} className="space-y-4">
+        <>
+          <form onSubmit={handleSignupSubmit} className="space-y-4" noValidate>
             <h2 className="text-2xl font-bold text-center">Create Account</h2>
             
             {error && (
@@ -179,98 +173,69 @@ const EmailLoginForm = () => {
               </Alert>
             )}
             
-            <FormField
-              control={signupForm.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="your.email@example.com" 
-                      type="email"
-                      {...field} 
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none" htmlFor="signup-email">Email</label>
+              <Input
+                id="signup-email"
+                name="email"
+                placeholder="your.email@example.com"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                disabled={isLoading}
+                onInput={() => setError(null)}
+              />
+            </div>
             
-            <FormField
-              control={signupForm.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input 
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-full px-3 py-2"
-                        onClick={togglePasswordVisibility}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                        <span className="sr-only">
-                          {showPassword ? "Hide password" : "Show password"}
-                        </span>
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none" htmlFor="signup-password">Password</label>
+              <div className="relative">
+                <Input
+                  id="signup-password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  onInput={() => setError(null)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3 py-2"
+                  onClick={togglePasswordVisibility}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
             
-            <FormField
-              control={signupForm.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input 
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-full px-3 py-2"
-                        onClick={togglePasswordVisibility}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                        <span className="sr-only">
-                          {showPassword ? "Hide password" : "Show password"}
-                        </span>
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none" htmlFor="signup-confirm-password">Confirm Password</label>
+              <div className="relative">
+                <Input
+                  id="signup-confirm-password"
+                  name="confirmPassword"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  onInput={() => setError(null)}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3 py-2"
+                  onClick={togglePasswordVisibility}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
             
             <Button 
               type="submit" 
@@ -296,12 +261,8 @@ const EmailLoginForm = () => {
               </Button>
             </p>
           </div>
-        </Form>
+        </>
       )}
-
-      <div className="text-center text-xs text-gray-500 mt-4">
-        <p>For demo purposes, any valid email and password combination works</p>
-      </div>
     </div>
   );
 };

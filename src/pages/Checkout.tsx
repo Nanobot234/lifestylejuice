@@ -310,6 +310,52 @@ const Checkout = () => {
                     />
                   )}
 
+                  {deliveryMethod === "pickup" && (
+                    <FormField
+                      control={form.control}
+                      name="pickupLocation"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3 p-4 rounded-lg border border-border bg-muted/30">
+                          <FormLabel>Pickup Location</FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              className="space-y-3"
+                            >
+                              {PICKUP_LOCATIONS.map((loc) => (
+                                <div
+                                  key={loc.id}
+                                  className="flex items-start justify-between gap-3 p-3 bg-white rounded-md border"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <RadioGroupItem value={loc.id} id={`pickup-${loc.id}`} className="mt-1" />
+                                    <label
+                                      htmlFor={`pickup-${loc.id}`}
+                                      className="cursor-pointer"
+                                    >
+                                      <div className="font-medium">{loc.label}</div>
+                                      <div className="text-sm text-muted-foreground">📍 {loc.address}</div>
+                                    </label>
+                                  </div>
+                                  <a
+                                    href={loc.mapsUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-juicy-green hover:underline whitespace-nowrap"
+                                  >
+                                    Directions →
+                                  </a>
+                                </div>
+                              ))}
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
                   {deliveryMethod === "shipping" && (
                     <div className="space-y-4 p-4 rounded-lg border border-border bg-muted/30">
                       <h3 className="font-semibold">Shipping Address</h3>

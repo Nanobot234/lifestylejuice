@@ -42,6 +42,7 @@ export async function fetchProducts(): Promise<Product[]> {
     category: row.category ?? "other",
     ingredients: [], // Could be extended in schema
     benefits: [], // Could be extended in schema
+    isShippable: (row as { is_shippable?: boolean }).is_shippable ?? false,
   }));
 }
 

@@ -23,15 +23,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DeliveryMethod, PaymentMethod } from "@/types";
 import { toast } from "sonner";
+import { calculateShipping, hasShippableItems, US_STATES } from "@/lib/shipping";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   phone: z.string().min(10, "Valid phone number is required"),
   email: z.string().email("Valid email is required"),
   address: z.string().optional(),
-  deliveryMethod: z.enum(["pickup", "delivery"]),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zip: z.string().optional(),
+  deliveryMethod: z.enum(["pickup", "delivery", "shipping"]),
   paymentMethod: z.enum(["card"]), // Only card payments through Stripe
   notes: z.string().optional(),
 });
@@ -41,6 +52,7 @@ const Checkout = () => {
   const { currentUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const cartHasShippable = hasShippableItems(cartItems);
 
   // Redirect if cart is empty
   React.useEffect(() => {
@@ -57,30 +69,44 @@ const Checkout = () => {
       phone: currentUser?.phone || "",
       email: currentUser?.email || "",
       address: "",
-      deliveryMethod: "pickup",
+      city: "",
+      state: "",
+      zip: "",
+      deliveryMethod: cartHasShippable ? "shipping" : "pickup",
       paymentMethod: "card",
       notes: "",
     },
   });
 
   const deliveryMethod = form.watch("deliveryMethod");
+  const shipState = form.watch("state");
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     
     try {
       // Validate required fields for delivery
-      if (values.deliveryMethod === 'delivery' && (!values.address || values.address.trim() === '')) {
+      if (values.deliveryMethod === "delivery" && (!values.address || values.address.trim() === "")) {
         toast.error("Please provide a delivery address");
         setIsSubmitting(false);
         return;
+      }
+      if (values.deliveryMethod === "shipping") {
+        if (!values.address || !values.city || !values.state || !values.zip) {
+          toast.error("Please provide a complete shipping address (street, city, state, zip)");
+          setIsSubmitting(false);
+          return;
+        }
       }
       
       const orderDetails = {
         name: values.name,
         phone: values.phone,
         email: values.email,
-        address: values.address,
+        address:
+          values.deliveryMethod === "shipping"
+            ? `${values.address}, ${values.city}, ${values.state} ${values.zip}`
+            : values.address,
         deliveryMethod: values.deliveryMethod as DeliveryMethod,
         paymentMethod: values.paymentMethod as PaymentMethod,
         notes: values.notes,
@@ -88,8 +114,12 @@ const Checkout = () => {
 
       const subtotal = total;
       const tax = subtotal * 0.08;
-      const deliveryFee = deliveryMethod === "delivery" ? 3.99 : 0;
-      const totalWithFees = subtotal + tax + deliveryFee;
+      const localDeliveryFee = values.deliveryMethod === "delivery" ? 3.99 : 0;
+      const shippingFee =
+        values.deliveryMethod === "shipping"
+          ? calculateShipping(cartItems, values.state)
+          : 0;
+      const totalWithFees = subtotal + tax + localDeliveryFee + shippingFee;
       
       // Create Stripe payment session
       const { data, error } = await supabase.functions.invoke('create-payment', {
@@ -97,7 +127,7 @@ const Checkout = () => {
           items: cartItems,
           orderDetails,
           total: totalWithFees,
-          deliveryFee,
+          deliveryFee: localDeliveryFee + shippingFee,
         },
       });
 
@@ -121,8 +151,10 @@ const Checkout = () => {
 
   const subtotal = total;
   const tax = subtotal * 0.08;
-  const deliveryFee = deliveryMethod === "delivery" ? 3.99 : 0;
-  const totalWithFees = subtotal + tax + deliveryFee;
+  const localDeliveryFee = deliveryMethod === "delivery" ? 3.99 : 0;
+  const shippingFee =
+    deliveryMethod === "shipping" ? calculateShipping(cartItems, shipState) : 0;
+  const totalWithFees = subtotal + tax + localDeliveryFee + shippingFee;
 
   return (
     <Layout>
@@ -184,31 +216,50 @@ const Checkout = () => {
                     name="deliveryMethod"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Delivery Method</FormLabel>
+                        <FormLabel>Fulfillment Method</FormLabel>
                         <FormControl>
                           <RadioGroup
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="flex space-x-6"
+                            value={field.value}
+                            className="flex flex-wrap gap-4"
                           >
-                            <FormItem className="flex items-center space-x-2">
-                              <FormControl>
-                                <RadioGroupItem value="pickup" />
-                              </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
-                                Pickup
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-2">
-                              <FormControl>
-                                <RadioGroupItem value="delivery" />
-                              </FormControl>
-                              <FormLabel className="font-normal cursor-pointer">
-                                Delivery (+$3.99)
-                              </FormLabel>
-                            </FormItem>
+                            {!cartHasShippable && (
+                              <>
+                                <FormItem className="flex items-center space-x-2">
+                                  <FormControl>
+                                    <RadioGroupItem value="pickup" />
+                                  </FormControl>
+                                  <FormLabel className="font-normal cursor-pointer">
+                                    Pickup
+                                  </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-2">
+                                  <FormControl>
+                                    <RadioGroupItem value="delivery" />
+                                  </FormControl>
+                                  <FormLabel className="font-normal cursor-pointer">
+                                    Local delivery (+$3.99)
+                                  </FormLabel>
+                                </FormItem>
+                              </>
+                            )}
+                            {cartHasShippable && (
+                              <FormItem className="flex items-center space-x-2">
+                                <FormControl>
+                                  <RadioGroupItem value="shipping" />
+                                </FormControl>
+                                <FormLabel className="font-normal cursor-pointer">
+                                  Ship to my address
+                                </FormLabel>
+                              </FormItem>
+                            )}
                           </RadioGroup>
                         </FormControl>
+                        {cartHasShippable && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Your cart includes sea moss, which ships nationwide. Shipping is calculated from your address below. For fresh juices or bowls, place a separate pickup/delivery order.
+                          </p>
+                        )}
                         <FormMessage />
                       </FormItem>
                     )}
@@ -231,6 +282,77 @@ const Checkout = () => {
                         </FormItem>
                       )}
                     />
+                  )}
+
+                  {deliveryMethod === "shipping" && (
+                    <div className="space-y-4 p-4 rounded-lg border border-border bg-muted/30">
+                      <h3 className="font-semibold">Shipping Address</h3>
+                      <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Street Address</FormLabel>
+                            <FormControl>
+                              <Input placeholder="123 Main St, Apt 4B" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>City</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Brooklyn" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="state"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>State</FormLabel>
+                              <Select onValueChange={field.onChange} value={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {US_STATES.map((s) => (
+                                    <SelectItem key={s.code} value={s.code}>
+                                      {s.code} — {s.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="zip"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>ZIP</FormLabel>
+                              <FormControl>
+                                <Input placeholder="11201" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
                   )}
 
                   <FormField
@@ -296,7 +418,17 @@ const Checkout = () => {
                 {deliveryMethod === "delivery" && (
                   <div className="flex justify-between">
                     <span className="text-gray-600">Delivery Fee</span>
-                    <span>${deliveryFee.toFixed(2)}</span>
+                    <span>${localDeliveryFee.toFixed(2)}</span>
+                  </div>
+                )}
+                {deliveryMethod === "shipping" && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">
+                      Shipping{shipState ? ` (${shipState})` : ""}
+                    </span>
+                    <span>
+                      {shippingFee === 0 && shipState ? "FREE" : `$${shippingFee.toFixed(2)}`}
+                    </span>
                   </div>
                 )}
                 <div className="border-t border-gray-200 my-2 pt-2 flex justify-between font-bold">

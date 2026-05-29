@@ -34,6 +34,21 @@ import { DeliveryMethod, PaymentMethod } from "@/types";
 import { toast } from "sonner";
 import { calculateShipping, hasShippableItems, US_STATES } from "@/lib/shipping";
 
+const PICKUP_LOCATIONS = [
+  {
+    id: "bronx",
+    label: "Bronx",
+    address: "6 E. 167th St., Bronx, NY",
+    mapsUrl: "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent("6 E. 167th St., Bronx, NY"),
+  },
+  {
+    id: "manhattan",
+    label: "Manhattan",
+    address: "411 W. 35th St., New York, NY",
+    mapsUrl: "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent("411 W. 35th St., New York, NY"),
+  },
+];
+
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   phone: z.string().min(10, "Valid phone number is required"),
@@ -43,6 +58,7 @@ const formSchema = z.object({
   state: z.string().optional(),
   zip: z.string().optional(),
   deliveryMethod: z.enum(["pickup", "delivery", "shipping"]),
+  pickupLocation: z.string().optional(),
   paymentMethod: z.enum(["card"]), // Only card payments through Stripe
   notes: z.string().optional(),
 });
@@ -73,6 +89,7 @@ const Checkout = () => {
       state: "",
       zip: "",
       deliveryMethod: cartHasShippable ? "shipping" : "pickup",
+      pickupLocation: "bronx",
       paymentMethod: "card",
       notes: "",
     },
@@ -80,6 +97,8 @@ const Checkout = () => {
 
   const deliveryMethod = form.watch("deliveryMethod");
   const shipState = form.watch("state");
+  const pickupLocationId = form.watch("pickupLocation");
+  const selectedPickup = PICKUP_LOCATIONS.find((l) => l.id === pickupLocationId);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
@@ -98,6 +117,11 @@ const Checkout = () => {
           return;
         }
       }
+      if (values.deliveryMethod === "pickup" && !values.pickupLocation) {
+        toast.error("Please select a pickup location");
+        setIsSubmitting(false);
+        return;
+      }
       
       const orderDetails = {
         name: values.name,
@@ -106,6 +130,8 @@ const Checkout = () => {
         address:
           values.deliveryMethod === "shipping"
             ? `${values.address}, ${values.city}, ${values.state} ${values.zip}`
+            : values.deliveryMethod === "pickup"
+            ? PICKUP_LOCATIONS.find((l) => l.id === values.pickupLocation)?.address
             : values.address,
         deliveryMethod: values.deliveryMethod as DeliveryMethod,
         paymentMethod: values.paymentMethod as PaymentMethod,
@@ -277,6 +303,52 @@ const Checkout = () => {
                               placeholder="Enter your full address"
                               {...field}
                             />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {deliveryMethod === "pickup" && (
+                    <FormField
+                      control={form.control}
+                      name="pickupLocation"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3 p-4 rounded-lg border border-border bg-muted/30">
+                          <FormLabel>Pickup Location</FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              className="space-y-3"
+                            >
+                              {PICKUP_LOCATIONS.map((loc) => (
+                                <div
+                                  key={loc.id}
+                                  className="flex items-start justify-between gap-3 p-3 bg-white rounded-md border"
+                                >
+                                  <div className="flex items-start space-x-3">
+                                    <RadioGroupItem value={loc.id} id={`pickup-${loc.id}`} className="mt-1" />
+                                    <label
+                                      htmlFor={`pickup-${loc.id}`}
+                                      className="cursor-pointer"
+                                    >
+                                      <div className="font-medium">{loc.label}</div>
+                                      <div className="text-sm text-muted-foreground">📍 {loc.address}</div>
+                                    </label>
+                                  </div>
+                                  <a
+                                    href={loc.mapsUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-juicy-green hover:underline whitespace-nowrap"
+                                  >
+                                    Directions →
+                                  </a>
+                                </div>
+                              ))}
+                            </RadioGroup>
                           </FormControl>
                           <FormMessage />
                         </FormItem>

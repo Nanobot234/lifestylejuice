@@ -15,7 +15,7 @@ export interface CartItem extends Product {
   quantity: number;
 }
 
-export type DeliveryMethod = "pickup" | "delivery";
+export type DeliveryMethod = "pickup" | "delivery" | "shipping";
 export type PaymentMethod = "cash" | "card" | "online";
 
 export interface OrderDetails {

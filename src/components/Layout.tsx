@@ -64,7 +64,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="container mx-auto px-4 py-5 flex justify-between items-center">
           <div className="flex items-center">
             <NavLink to="/" className="flex items-center leading-none" aria-label="Lifestyle 1104 Juice Bar">
-              <img src={logo} alt="Lifestyle 1104 Juice Bar" className="h-12 md:h-14 w-auto" />
+              <img src={logo} alt="Lifestyle 1104 Juice Bar" className="h-14 md:h-16 w-auto" />
             </NavLink>
           </div>
 

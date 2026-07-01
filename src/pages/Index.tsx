@@ -28,8 +28,8 @@ const Index = () => {
   useEffect(() => {
     fetchProducts().then((p) => {
       const blends = p.filter((item) => item.category?.includes("blend"));
-      const bowls = p.filter((item) => item.category === "bowl");
-      const bites = p.filter((item) => item.category === "protein-bite");
+      const bowls = p.filter((item) => item.category === "bowls");
+      const bites = p.filter((item) => item.category === "protein bites");
       const toastItems = p.filter((item) => item.category === "toast");
       const cp = p.filter((item) => item.category === "cold-pressed juice");
       setFeatured(blends.slice(0, 3));

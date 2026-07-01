@@ -35,10 +35,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   const menuSubLinks = [
-    { path: "/menu?category=juice", label: "Juices" },
-    { path: "/menu?category=smoothie", label: "Smoothies" },
-    { path: "/menu?category=bowl", label: "Bowls" },
-    { path: "/menu?category=protein", label: "Protein" },
+    { path: "/menu?category=fresh%20juice", label: "Fresh Juices" },
+    { path: "/menu?category=cold-pressed%20juice", label: "Cold-Pressed" },
+    { path: "/menu?category=superfood%20blends", label: "Superfood Blends" },
+    { path: "/menu?category=protein%20blends", label: "Protein Blends" },
+    { path: "/menu?category=bowls", label: "Bowls" },
+    { path: "/menu?category=toast", label: "Toasts" },
+    { path: "/menu?category=protein%20bites", label: "Protein Bites" },
+    { path: "/menu?category=cleanse", label: "Cleanse" },
+    { path: "/menu?category=sea%20moss", label: "Sea Moss" },
   ];
 
   const toggleMenu = () => {

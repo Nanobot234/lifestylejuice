@@ -65,7 +65,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         id: `${product.id}-${cleanseDays.replace(" ", "")}`,
         name: `${product.name} (${cleanseDays})`,
         price: product.price * mult,
-        quantity: mult,
       });
     } else if (isBowl) {
       const addOns = [...toppings, ...drizzles];

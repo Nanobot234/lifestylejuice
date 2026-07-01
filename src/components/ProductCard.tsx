@@ -10,6 +10,9 @@ import { cn } from "@/lib/utils";
 type JuiceSize = "16oz" | "24oz";
 const SIZE_UPCHARGE: Record<JuiceSize, number> = { "16oz": 0, "24oz": 2 };
 
+type CleanseDays = "1 Day" | "3 Day" | "7 Day";
+const CLEANSE_MULTIPLIER: Record<CleanseDays, number> = { "1 Day": 1, "3 Day": 3, "7 Day": 7 };
+
 const BOWL_TOPPINGS = {
   Fruit: ["Banana", "Strawberries", "Blueberries", "Mango", "Kiwi", "Raspberries", "Blackberries"],
   Superfood: ["Chia Seeds", "Flax Seeds", "Hemp Seeds"],
@@ -26,16 +29,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const { addToCart } = useCart();
   const hasSizes =
     product.category === "fresh juice" ||
-    product.category === "cold-pressed juice" ||
-    product.category === "superfood blend" ||
-    product.category === "protein blend";
-  const isBowl = product.category === "bowl";
+    product.category === "superfood blends" ||
+    product.category === "protein blends";
+  const isColdPressed = product.category === "cold-pressed juice";
+  const isBowl = product.category === "bowls";
+  const isCleanse = product.category === "cleanse";
   const [size, setSize] = useState<JuiceSize>("16oz");
+  const [cleanseDays, setCleanseDays] = useState<CleanseDays>("1 Day");
   const [toppings, setToppings] = useState<string[]>([]);
   const [drizzles, setDrizzles] = useState<string[]>([]);
   const [customizeOpen, setCustomizeOpen] = useState(false);
 
-  const displayPrice = hasSizes ? product.price + SIZE_UPCHARGE[size] : product.price;
+  const displayPrice = hasSizes
+    ? product.price + SIZE_UPCHARGE[size]
+    : isCleanse
+    ? product.price * CLEANSE_MULTIPLIER[cleanseDays]
+    : product.price;
 
   const toggle = (list: string[], setList: (v: string[]) => void, item: string) => {
     setList(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
@@ -48,6 +57,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         id: `${product.id}-${size}`,
         name: `${product.name} (${size})`,
         price: product.price + SIZE_UPCHARGE[size],
+      });
+    } else if (isCleanse) {
+      const mult = CLEANSE_MULTIPLIER[cleanseDays];
+      addToCart({
+        ...product,
+        id: `${product.id}-${cleanseDays.replace(" ", "")}`,
+        name: `${product.name} (${cleanseDays})`,
+        price: product.price * mult,
+        quantity: mult,
       });
     } else if (isBowl) {
       const addOns = [...toppings, ...drizzles];
@@ -99,6 +117,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
                 )}
               >
                 {s}
+              </button>
+            ))}
+          </div>
+        )}
+        {isColdPressed && (
+          <p className="mt-4 text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
+            16 oz bottle
+          </p>
+        )}
+        {isCleanse && (
+          <div className="mt-4 flex gap-2">
+            {(["1 Day", "3 Day", "7 Day"] as CleanseDays[]).map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => setCleanseDays(d)}
+                className={cn(
+                  "flex-1 text-xs tracking-[0.15em] uppercase py-2 rounded-full border transition-colors",
+                  cleanseDays === d
+                    ? "bg-foreground text-background border-foreground"
+                    : "bg-transparent text-foreground border-border hover:border-foreground"
+                )}
+              >
+                {d}
               </button>
             ))}
           </div>

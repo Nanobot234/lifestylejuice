@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { MapPin, Phone, Mail, Instagram } from "lucide-react";
+import { MapPin, Mail, Instagram, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import {
   Form,
@@ -25,6 +25,20 @@ const formSchema = z.object({
   message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
+const LOCATIONS = [
+  {
+    label: "6 E. 167th St., Bronx, NY",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=6+E+167th+St,+Bronx,+NY",
+  },
+  {
+    label: "411 W. 35th St., New York, NY",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=411+W+35th+St,+New+York,+NY",
+  },
+];
+
+const INSTAGRAM_URL = "https://www.instagram.com/lifestyle1104juicebar";
+const EMAIL = "lifestyle1104juicebar@gmail.com";
+
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -42,12 +56,11 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const to = "lifestyle1104juicebar@gmail.com";
       const subject = encodeURIComponent(values.subject);
       const body = encodeURIComponent(
         `Name: ${values.name}\nEmail: ${values.email}\n\n${values.message}`
       );
-      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
       toast.success("Opening your email app to send the message.");
       form.reset();
     } catch (error) {
@@ -60,66 +73,102 @@ const Contact = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-juicy-purple/90 to-juicy-green/90 py-12">
-        <div className="container mx-auto px-4 text-center text-white">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">Contact Us</h1>
-          <p className="max-w-2xl mx-auto">
-            Have questions, suggestions, or want to place a large order? We'd love to hear from you!
+      {/* Hero */}
+      <section className="bg-muted/40 border-b border-border">
+        <div className="container mx-auto px-4 py-16 md:py-24 text-center">
+          <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
+            Get in Touch
+          </span>
+          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl mt-4 mb-6 text-foreground">
+            CONTACT US
+          </h1>
+          <p className="max-w-xl mx-auto text-muted-foreground text-base md:text-lg leading-relaxed">
+            Have questions, suggestions, or want to place a large order? We&apos;d love to hear from you.
           </p>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <section className="container mx-auto px-4 py-16 md:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+          {/* Contact info */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-md p-6 h-full">
-              <h2 className="text-2xl font-semibold mb-6">Get In Touch</h2>
-              
-              <div className="space-y-6">
+            <div className="border border-border rounded-2xl bg-card p-8 h-full">
+              <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
+                The Details
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl mt-2 mb-8 text-foreground">
+                GET IN TOUCH
+              </h2>
+
+              <div className="space-y-8">
                 <div className="flex items-start">
-                  <MapPin className="h-5 w-5 text-juicy-green mr-4 mt-1" />
+                  <MapPin className="h-5 w-5 text-foreground mr-4 mt-1 shrink-0" />
                   <div>
-                    <h3 className="font-medium text-lg">Visit Us</h3>
-                    <p className="text-gray-600">6 E. 167th St., Bronx, NY</p>
-                    <p className="text-gray-600">411 W. 35th St., New York, NY</p>
+                    <h3 className="font-display text-sm tracking-[0.2em] uppercase text-foreground mb-3">
+                      Visit Us
+                    </h3>
+                    <div className="space-y-2">
+                      {LOCATIONS.map((location) => (
+                        <a
+                          key={location.label}
+                          href={location.mapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4 text-sm"
+                        >
+                          {location.label}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <Phone className="h-5 w-5 text-juicy-green mr-4 mt-1" />
+                  <Mail className="h-5 w-5 text-foreground mr-4 mt-1 shrink-0" />
                   <div>
-                    <h3 className="font-medium text-lg">Call Us</h3>
-                    <p className="text-gray-600">(555) 123-4567</p>
-                    <p className="text-gray-500 text-sm">Mon-Fri: 8am - 8pm, Sat-Sun: 9am - 6pm</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <Mail className="h-5 w-5 text-juicy-green mr-4 mt-1" />
-                  <div>
-                    <h3 className="font-medium text-lg">Email Us</h3>
-                    <p className="text-gray-600">lifestyle1104juicebar@gmail.com</p>
-                    <p className="text-gray-500 text-sm">We'll respond within 24 hours</p>
+                    <h3 className="font-display text-sm tracking-[0.2em] uppercase text-foreground mb-2">
+                      Email Us
+                    </h3>
+                    <a
+                      href={`mailto:${EMAIL}`}
+                      className="text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4 text-sm"
+                    >
+                      {EMAIL}
+                    </a>
+                    <p className="text-muted-foreground/70 text-xs mt-1">
+                      We&apos;ll respond within 24 hours
+                    </p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-lg mb-2">Follow Us</h3>
-                  <div className="flex space-x-4">
-                    <a href="#" className="bg-juicy-green/10 text-juicy-green hover:bg-juicy-green hover:text-white p-3 rounded-full transition-colors">
-                      <Instagram className="h-5 w-5" />
-                    </a>
-                  </div>
+                  <h3 className="font-display text-sm tracking-[0.2em] uppercase text-foreground mb-4">
+                    Follow Us
+                  </h3>
+                  <a
+                    href={INSTAGRAM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-border text-foreground hover:bg-foreground hover:text-background transition-colors text-xs tracking-[0.15em] uppercase"
+                  >
+                    <Instagram className="h-4 w-4" />
+                    @lifestyle1104juicebar
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Contact form */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-2xl font-semibold mb-6">Send Us a Message</h2>
-              
+            <div className="border border-border rounded-2xl bg-card p-8">
+              <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">
+                Send a Note
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl mt-2 mb-8 text-foreground">
+                SEND US A MESSAGE
+              </h2>
+
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -128,7 +177,9 @@ const Contact = () => {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Your Name</FormLabel>
+                          <FormLabel className="text-xs tracking-[0.15em] uppercase text-muted-foreground">
+                            Your Name
+                          </FormLabel>
                           <FormControl>
                             <Input placeholder="John Doe" {...field} />
                           </FormControl>
@@ -136,13 +187,15 @@ const Contact = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email Address</FormLabel>
+                          <FormLabel className="text-xs tracking-[0.15em] uppercase text-muted-foreground">
+                            Email Address
+                          </FormLabel>
                           <FormControl>
                             <Input placeholder="you@example.com" {...field} />
                           </FormControl>
@@ -157,7 +210,9 @@ const Contact = () => {
                     name="subject"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Subject</FormLabel>
+                        <FormLabel className="text-xs tracking-[0.15em] uppercase text-muted-foreground">
+                          Subject
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder="How can we help you?" {...field} />
                         </FormControl>
@@ -165,32 +220,35 @@ const Contact = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Message</FormLabel>
+                        <FormLabel className="text-xs tracking-[0.15em] uppercase text-muted-foreground">
+                          Message
+                        </FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="Tell us more about your inquiry..." 
-                            className="min-h-[120px]"
-                            {...field} 
+                          <Textarea
+                            placeholder="Tell us more about your inquiry..."
+                            className="min-h-[140px]"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
+
                   <div className="flex justify-end">
-                    <Button 
-                      type="submit" 
-                      className="bg-juicy-green hover:bg-juicy-green/90"
+                    <Button
+                      type="submit"
                       disabled={isSubmitting}
+                      className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-8 py-6 tracking-[0.15em] text-xs uppercase"
                     >
                       {isSubmitting ? "Sending..." : "Send Message"}
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
                 </form>
@@ -199,27 +257,9 @@ const Contact = () => {
           </div>
         </div>
       </section>
-
-      {/* Map Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Find Our Location</h2>
-          <div className="bg-white rounded-xl shadow-md overflow-hidden h-[400px]">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d423286.27405770525!2d-118.69192047471653!3d34.02016130653294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c75ddc27da13%3A0xe22fdf6f254608f4!2sLos%20Angeles%2C%20CA%2C%20USA!5e0!3m2!1sen!2sca!4v1593552641989!5m2!1sen!2sca" 
-              width="100%" 
-              height="100%" 
-              frameBorder="0" 
-              style={{ border: 0 }} 
-              allowFullScreen 
-              aria-hidden="false" 
-              tabIndex={0}
-            ></iframe>
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 };
 
 export default Contact;
+

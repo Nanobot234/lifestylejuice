@@ -128,6 +128,20 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   // Helper functions
   const addToCart = (product: Product) => {
+    // Prevent mixing shippable and non-shippable items in the same order
+    const existing = state.items.find((item) => isSameId(item.id, product.id));
+    if (!existing && state.items.length > 0) {
+      const cartIsShippable = state.items.some((i) => i.isShippable);
+      const productIsShippable = !!product.isShippable;
+      if (cartIsShippable !== productIsShippable) {
+        toast.error(
+          cartIsShippable
+            ? "Your cart has shippable items. Please place a separate order for pickup/delivery items."
+            : "Your cart has pickup/delivery items. Please place a separate order for shippable items."
+        );
+        return;
+      }
+    }
     dispatch({ type: "ADD_ITEM", payload: product });
     toast.success(`Added ${product.name} to cart!`);
   };

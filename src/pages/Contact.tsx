@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from "lucide-react";
+import { MapPin, Phone, Mail, Instagram } from "lucide-react";
 import Layout from "@/components/Layout";
 import {
   Form,
@@ -40,14 +40,18 @@ const Contact = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
-    
-    // Simulate API call
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("Message sent successfully! We'll get back to you soon.");
+      const to = "lifestyle1104juicebar@gmail.com";
+      const subject = encodeURIComponent(values.subject);
+      const body = encodeURIComponent(
+        `Name: ${values.name}\nEmail: ${values.email}\n\n${values.message}`
+      );
+      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+      toast.success("Opening your email app to send the message.");
       form.reset();
     } catch (error) {
-      toast.error("Failed to send message. Please try again.");
+      toast.error("Failed to open email app. Please try again.");
       console.error("Error sending message:", error);
     } finally {
       setIsSubmitting(false);
@@ -77,7 +81,8 @@ const Contact = () => {
                   <MapPin className="h-5 w-5 text-juicy-green mr-4 mt-1" />
                   <div>
                     <h3 className="font-medium text-lg">Visit Us</h3>
-                    <p className="text-gray-600">123 Juice Street, Freshville, CA 90210</p>
+                    <p className="text-gray-600">6 E. 167th St., Bronx, NY</p>
+                    <p className="text-gray-600">411 W. 35th St., New York, NY</p>
                   </div>
                 </div>
 
@@ -94,7 +99,7 @@ const Contact = () => {
                   <Mail className="h-5 w-5 text-juicy-green mr-4 mt-1" />
                   <div>
                     <h3 className="font-medium text-lg">Email Us</h3>
-                    <p className="text-gray-600">hello@juicejoy.com</p>
+                    <p className="text-gray-600">lifestyle1104juicebar@gmail.com</p>
                     <p className="text-gray-500 text-sm">We'll respond within 24 hours</p>
                   </div>
                 </div>
@@ -104,12 +109,6 @@ const Contact = () => {
                   <div className="flex space-x-4">
                     <a href="#" className="bg-juicy-green/10 text-juicy-green hover:bg-juicy-green hover:text-white p-3 rounded-full transition-colors">
                       <Instagram className="h-5 w-5" />
-                    </a>
-                    <a href="#" className="bg-juicy-green/10 text-juicy-green hover:bg-juicy-green hover:text-white p-3 rounded-full transition-colors">
-                      <Facebook className="h-5 w-5" />
-                    </a>
-                    <a href="#" className="bg-juicy-green/10 text-juicy-green hover:bg-juicy-green hover:text-white p-3 rounded-full transition-colors">
-                      <Twitter className="h-5 w-5" />
                     </a>
                   </div>
                 </div>

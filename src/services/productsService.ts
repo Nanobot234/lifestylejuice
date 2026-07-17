@@ -33,7 +33,7 @@ export async function fetchProducts(): Promise<Product[]> {
   }
 
   // Convert db row to Product type
-  return (data || []).map((row) => ({
+  const products = (data || []).map((row) => ({
     id: row.id,
     name: row.name,
     description: row.description ?? "",
@@ -44,6 +44,26 @@ export async function fetchProducts(): Promise<Product[]> {
     benefits: [], // Could be extended in schema
     isShippable: (row as { is_shippable?: boolean }).is_shippable ?? false,
   }));
+
+  // Cold-pressed juices are numbered on the bottle — display in that order.
+  const coldPressedOrder: Record<string, number> = {
+    "kick off": 1,
+    "just beet it": 2,
+    "watch me work": 3,
+    "snatched af": 4,
+    "blue majik": 5,
+    "orange you happy": 6,
+  };
+  products.sort((a, b) => {
+    if (a.category === "cold-pressed juice" && b.category === "cold-pressed juice") {
+      return (
+        (coldPressedOrder[a.name.toLowerCase()] ?? 99) -
+        (coldPressedOrder[b.name.toLowerCase()] ?? 99)
+      );
+    }
+    return 0;
+  });
+  return products;
 }
 
 /**

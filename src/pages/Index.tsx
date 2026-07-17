@@ -97,11 +97,11 @@ const Index = () => {
             <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">SIGNATURE BLENDS</h2>
           </div>
           <Button
-            onClick={() => navigate("/menu")}
+            onClick={() => navigate("/menu?category=superfood%20blends")}
             variant="ghost"
             className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
           >
-            View Full Menu <ArrowRight className="ml-2 h-4 w-4" />
+            View Signature Blends <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
 
@@ -124,11 +124,11 @@ const Index = () => {
             <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">SIGNATURE BOWLS</h2>
           </div>
           <Button
-            onClick={() => navigate("/menu")}
+            onClick={() => navigate("/menu?category=bowls")}
             variant="ghost"
             className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
           >
-            View Full Menu <ArrowRight className="ml-2 h-4 w-4" />
+            View Signature Bowls <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
 
@@ -206,7 +206,7 @@ const Index = () => {
             variant="ghost"
             className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
           >
-            View All Bottles <ArrowRight className="ml-2 h-4 w-4" />
+            View Cold-Pressed Juices <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
 

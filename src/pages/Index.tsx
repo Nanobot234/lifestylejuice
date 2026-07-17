@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Leaf, Sparkles, Heart, Plus } from "lucide-react";
+import { ArrowRight, Leaf, Sparkles, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
@@ -8,8 +8,6 @@ import { fetchProducts } from "@/services/productsService";
 import { Product } from "@/types";
 import { useCart } from "@/context/CartContext";
 import allSmoothiesImg from "@/assets/all-smoothies.jpeg";
-import cpSnatchedAf from "@/assets/cp-snatched-af.jpg";
-import cpBlueMajik from "@/assets/cp-blue-majik.jpg";
 
 const Index = () => {
   const navigate = useNavigate();

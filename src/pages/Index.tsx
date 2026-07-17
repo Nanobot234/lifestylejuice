@@ -151,25 +151,19 @@ const Index = () => {
             <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">PROTEIN BITES</h2>
             <p className="text-muted-foreground text-sm mt-3 max-w-md">Bite-sized fuel. Pick your flavor — whey or plant-based.</p>
           </div>
+          <Button
+            onClick={() => navigate("/menu?category=protein%20bites")}
+            variant="ghost"
+            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+          >
+            View Protein Bites <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-          <div>
-            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
-              <img src={proteinBitesChocolate} alt="Chocolate chip protein bites" className="w-full h-full object-cover" />
-            </div>
-            <div className="space-y-5">
-              {chocolateBites.map(renderBiteOption)}
-            </div>
-          </div>
-          <div>
-            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
-              <img src={proteinBitesCoconut} alt="Coconut protein bites" className="w-full h-full object-cover" />
-            </div>
-            <div className="space-y-5">
-              {coconutBites.map(renderBiteOption)}
-            </div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {proteinBites.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
         </div>
       </section>
 
@@ -181,21 +175,19 @@ const Index = () => {
             <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">TOASTS</h2>
             <p className="text-muted-foreground text-sm mt-3 max-w-md">Crisp, fresh, and loaded — sweet or savory.</p>
           </div>
+          <Button
+            onClick={() => navigate("/menu?category=toast")}
+            variant="ghost"
+            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+          >
+            View Toasts <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-          <div>
-            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
-              <img src={toastAvocadoImg} alt="Avocado toast with spinach and balsamic glaze" className="w-full h-full object-cover" />
-            </div>
-            {toasts.filter((t) => t.name.toLowerCase().includes("avocado")).map(renderBiteOption)}
-          </div>
-          <div>
-            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-muted mb-6">
-              <img src={toastPbBerryImg} alt="Peanut butter and berry toast with almonds" className="w-full h-full object-cover" />
-            </div>
-            {toasts.filter((t) => !t.name.toLowerCase().includes("avocado")).map(renderBiteOption)}
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {toasts.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
         </div>
       </section>
 

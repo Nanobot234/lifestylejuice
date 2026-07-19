@@ -89,7 +89,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+          className={cn(
+            "w-full h-full object-center transform group-hover:scale-105 transition-transform duration-700",
+            isCleanse ? "object-contain p-4" : "object-cover"
+          )}
         />
         <span className="absolute top-3 left-3 text-[10px] tracking-[0.25em] uppercase bg-background/80 backdrop-blur-sm text-foreground px-3 py-1 rounded-full">
           {product.category}

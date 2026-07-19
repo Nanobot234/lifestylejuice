@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Leaf, Sparkles, Heart } from "lucide-react";
+import { ArrowRight, Leaf, Sparkles, Heart, Droplets, Zap, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
@@ -14,22 +14,24 @@ const Index = () => {
   const { addToCart } = useCart();
   const [featured, setFeatured] = useState<Product[]>([]);
   const [featuredBowls, setFeaturedBowls] = useState<Product[]>([]);
-  const [proteinBites, setProteinBites] = useState<Product[]>([]);
-  const [toasts, setToasts] = useState<Product[]>([]);
-  const [coldPressed, setColdPressed] = useState<Product[]>([]);
+  const [freshJuices, setFreshJuices] = useState<Product[]>([]);
+  const [seaMoss, setSeaMoss] = useState<Product[]>([]);
+  const [cleanse, setCleanse] = useState<Product | null>(null);
+  const [avocadoToast, setAvocadoToast] = useState<Product | null>(null);
+  const [fruitToast, setFruitToast] = useState<Product | null>(null);
 
   useEffect(() => {
     fetchProducts().then((p) => {
       const blends = p.filter((item) => item.category?.includes("blend"));
       const bowls = p.filter((item) => item.category === "bowls");
-      const bites = p.filter((item) => item.category === "protein bites");
-      const toastItems = p.filter((item) => item.category === "toast");
-      const cp = p.filter((item) => item.category === "cold-pressed juice");
       setFeatured(blends.slice(0, 3));
       setFeaturedBowls(bowls.slice(0, 3));
-      setProteinBites(bites);
-      setToasts(toastItems);
-      setColdPressed(cp);
+      setFreshJuices(p.filter((i) => i.category === "fresh juice").slice(0, 3));
+      setSeaMoss(p.filter((i) => i.category === "sea moss"));
+      setCleanse(p.find((i) => i.category === "cold pressed juice cleans") ?? null);
+      const toasts = p.filter((i) => i.category === "toast");
+      setAvocadoToast(toasts.find((t) => /avocado/i.test(t.name)) ?? null);
+      setFruitToast(toasts.find((t) => /fruit/i.test(t.name)) ?? null);
     });
   }, []);
 
@@ -80,8 +82,127 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured */}
-      <section className="container mx-auto px-4 py-20">
+      {/* Juice Cleanse — feature spotlight */}
+      {cleanse && (
+        <section className="container mx-auto px-4 py-20">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center bg-muted/40 rounded-3xl p-6 md:p-12">
+            <div className="relative">
+              <div className="aspect-square md:aspect-[4/5] overflow-hidden rounded-2xl bg-background flex items-center justify-center">
+                <img
+                  src={cleanse.image}
+                  alt={cleanse.name}
+                  className="w-full h-full object-contain p-4"
+                />
+              </div>
+            </div>
+            <div>
+              <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Reset & Restore</span>
+              <h2 className="font-display text-4xl md:text-5xl mt-2 mb-4 text-foreground">JUICE CLEANSE</h2>
+              <p className="text-muted-foreground leading-relaxed mb-8 max-w-md">
+                Six numbered cold-pressed juices, sipped in order throughout the day to flush, hydrate, and re-energize. Choose 1, 3, or 7 days.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="flex items-start gap-3">
+                  <Droplets className="h-5 w-5 text-foreground mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs tracking-[0.15em] uppercase text-foreground">Hydrate</p>
+                    <p className="text-xs text-muted-foreground mt-1">Whole-fruit hydration all day.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Zap className="h-5 w-5 text-foreground mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs tracking-[0.15em] uppercase text-foreground">Energize</p>
+                    <p className="text-xs text-muted-foreground mt-1">Clean vitamins, no caffeine crash.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="h-5 w-5 text-foreground mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs tracking-[0.15em] uppercase text-foreground">Reset</p>
+                    <p className="text-xs text-muted-foreground mt-1">Give your system a soft reboot.</p>
+                  </div>
+                </div>
+              </div>
+              <Button
+                onClick={() => navigate("/menu?category=cold%20pressed%20juice%20cleans")}
+                className="juice-button bg-foreground text-background hover:bg-foreground/90 uppercase text-xs tracking-[0.2em]"
+              >
+                View Juice Cleanse <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Sea Moss */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Shippable Nationwide</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">SEA MOSS</h2>
+          </div>
+          <Button
+            onClick={() => navigate("/menu?category=sea%20moss")}
+            variant="ghost"
+            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+          >
+            View Sea Moss <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {seaMoss.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
+
+      {/* Acai Bowls */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">The Lineup</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">ACAI BOWLS</h2>
+          </div>
+          <Button
+            onClick={() => navigate("/menu?category=bowls")}
+            variant="ghost"
+            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+          >
+            View Acai Bowls <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {featuredBowls.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
+
+      {/* Fresh Juices */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Made To Order</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">JUICES</h2>
+          </div>
+          <Button
+            onClick={() => navigate("/menu?category=fresh%20juice")}
+            variant="ghost"
+            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+          >
+            View Juices <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {freshJuices.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
+
+      {/* Signature Blends */}
+      <section className="container mx-auto px-4 py-20 border-t border-border">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
           <div>
             <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">The Lineup</span>
@@ -95,122 +216,56 @@ const Index = () => {
             View Signature Blends <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
-
-        {featured.length === 0 ? (
-          <div className="text-center text-muted-foreground py-12">Loading menu…</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {featured.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Signature Bowls */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
-          <div>
-            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">The Lineup</span>
-            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">SIGNATURE BOWLS</h2>
-          </div>
-          <Button
-            onClick={() => navigate("/menu?category=bowls")}
-            variant="ghost"
-            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
-          >
-            View Signature Bowls <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-
-        {featuredBowls.length === 0 ? (
-          <div className="text-center text-muted-foreground py-12">Loading bowls…</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {featuredBowls.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Protein Bites */}
-      <section className="container mx-auto px-4 py-20 border-t border-border">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
-          <div>
-            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Pickup Only</span>
-            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">PROTEIN BITES</h2>
-            <p className="text-muted-foreground text-sm mt-3 max-w-md">Bite-sized fuel. Pick your flavor — whey or plant-based.</p>
-          </div>
-          <Button
-            onClick={() => navigate("/menu?category=protein%20bites")}
-            variant="ghost"
-            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
-          >
-            View Protein Bites <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {proteinBites.map((p) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {featured.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </section>
 
-      {/* Toasts */}
-      <section className="container mx-auto px-4 py-20 border-t border-border">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
-          <div>
-            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Fresh Off The Press</span>
-            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">TOASTS</h2>
-            <p className="text-muted-foreground text-sm mt-3 max-w-md">Crisp, fresh, and loaded — sweet or savory.</p>
+      {/* Avocado Toast */}
+      {avocadoToast && (
+        <section className="container mx-auto px-4 py-20 border-t border-border">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+            <div>
+              <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Fresh Off The Press</span>
+              <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">AVOCADO TOAST</h2>
+            </div>
+            <Button
+              onClick={() => navigate("/menu?category=toast")}
+              variant="ghost"
+              className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+            >
+              View Toasts <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
-          <Button
-            onClick={() => navigate("/menu?category=toast")}
-            variant="ghost"
-            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
-          >
-            View Toasts <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {toasts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      </section>
-
-      {/* Cold-Pressed Juices */}
-      <section className="container mx-auto px-4 py-20 border-t border-border">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
-          <div>
-            <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Bottled Daily</span>
-            <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">COLD-PRESSED</h2>
-            <p className="text-muted-foreground text-sm mt-3 max-w-md">
-              Numbered, small-batch, never heated. Grab-and-go bottles, made fresh every morning.
-            </p>
-          </div>
-          <Button
-            onClick={() => navigate("/menu?category=cold-pressed%20juice")}
-            variant="ghost"
-            className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
-          >
-            View Cold-Pressed Juices <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-
-        {coldPressed.length === 0 ? (
-          <div className="text-center text-muted-foreground py-12">Loading…</div>
-        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {coldPressed.slice(0, 3).map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
+            <ProductCard product={avocadoToast} />
           </div>
-        )}
-      </section>
+        </section>
+      )}
+
+      {/* Fruit Toast */}
+      {fruitToast && (
+        <section className="container mx-auto px-4 py-20 border-t border-border">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+            <div>
+              <span className="text-[11px] tracking-[0.35em] text-muted-foreground uppercase">Fresh Off The Press</span>
+              <h2 className="font-display text-4xl md:text-5xl mt-2 text-foreground">FRUIT TOAST</h2>
+            </div>
+            <Button
+              onClick={() => navigate("/menu?category=toast")}
+              variant="ghost"
+              className="self-start md:self-auto uppercase text-xs tracking-[0.2em] text-foreground hover:bg-transparent hover:underline"
+            >
+              View Toasts <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <ProductCard product={fruitToast} />
+          </div>
+        </section>
+      )}
 
       {/* Philosophy */}
       <section className="bg-foreground text-background py-20">

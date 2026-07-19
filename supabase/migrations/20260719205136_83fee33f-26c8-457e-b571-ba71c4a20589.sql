@@ -1,0 +1,1 @@
+UPDATE products SET category = 'cold pressed juice cleans' WHERE category = 'cleanse';

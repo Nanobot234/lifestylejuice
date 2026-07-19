@@ -11,7 +11,7 @@ type JuiceSize = "16oz" | "24oz";
 const SIZE_UPCHARGE: Record<JuiceSize, number> = { "16oz": 0, "24oz": 2 };
 
 type CleanseDays = "1 Day" | "3 Day" | "7 Day";
-const CLEANSE_MULTIPLIER: Record<CleanseDays, number> = { "1 Day": 1, "3 Day": 3, "7 Day": 7 };
+const CLEANSE_PRICE: Record<CleanseDays, number> = { "1 Day": 50, "3 Day": 130, "7 Day": 250 };
 
 const BOWL_TOPPINGS = {
   Fruit: ["Banana", "Strawberries", "Blueberries", "Mango", "Kiwi", "Raspberries", "Blackberries"],

@@ -42,7 +42,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: "/menu?category=bowls", label: "Bowls" },
     { path: "/menu?category=toast", label: "Toasts" },
     { path: "/menu?category=protein%20bites", label: "Protein Bites" },
-    { path: "/menu?category=cleanse", label: "Cleanse" },
+    { path: "/menu?category=cold%20pressed%20juice%20cleans", label: "Cold Pressed Juice Cleans" },
     { path: "/menu?category=sea%20moss", label: "Sea Moss" },
   ];
 

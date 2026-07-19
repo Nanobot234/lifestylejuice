@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Leaf, Sparkles, Heart } from "lucide-react";
+import { ArrowRight, Leaf, Sparkles, Heart, Droplets, Zap, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
@@ -14,22 +14,24 @@ const Index = () => {
   const { addToCart } = useCart();
   const [featured, setFeatured] = useState<Product[]>([]);
   const [featuredBowls, setFeaturedBowls] = useState<Product[]>([]);
-  const [proteinBites, setProteinBites] = useState<Product[]>([]);
-  const [toasts, setToasts] = useState<Product[]>([]);
-  const [coldPressed, setColdPressed] = useState<Product[]>([]);
+  const [freshJuices, setFreshJuices] = useState<Product[]>([]);
+  const [seaMoss, setSeaMoss] = useState<Product[]>([]);
+  const [cleanse, setCleanse] = useState<Product | null>(null);
+  const [avocadoToast, setAvocadoToast] = useState<Product | null>(null);
+  const [fruitToast, setFruitToast] = useState<Product | null>(null);
 
   useEffect(() => {
     fetchProducts().then((p) => {
       const blends = p.filter((item) => item.category?.includes("blend"));
       const bowls = p.filter((item) => item.category === "bowls");
-      const bites = p.filter((item) => item.category === "protein bites");
-      const toastItems = p.filter((item) => item.category === "toast");
-      const cp = p.filter((item) => item.category === "cold-pressed juice");
       setFeatured(blends.slice(0, 3));
       setFeaturedBowls(bowls.slice(0, 3));
-      setProteinBites(bites);
-      setToasts(toastItems);
-      setColdPressed(cp);
+      setFreshJuices(p.filter((i) => i.category === "fresh juice").slice(0, 3));
+      setSeaMoss(p.filter((i) => i.category === "sea moss"));
+      setCleanse(p.find((i) => i.category === "cold pressed juice cleans") ?? null);
+      const toasts = p.filter((i) => i.category === "toast");
+      setAvocadoToast(toasts.find((t) => /avocado/i.test(t.name)) ?? null);
+      setFruitToast(toasts.find((t) => /fruit/i.test(t.name)) ?? null);
     });
   }, []);
 

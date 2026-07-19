@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     product.category === "protein blends";
   const isColdPressed = product.category === "cold-pressed juice";
   const isBowl = product.category === "bowls";
-  const isCleanse = product.category === "cleanse";
+  const isCleanse = product.category === "cold pressed juice cleans";
   const [size, setSize] = useState<JuiceSize>("16oz");
   const [cleanseDays, setCleanseDays] = useState<CleanseDays>("1 Day");
   const [toppings, setToppings] = useState<string[]>([]);

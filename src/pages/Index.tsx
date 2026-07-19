@@ -53,14 +53,7 @@ const Index = () => {
                 onClick={() => navigate("/menu")}
                 className="juice-button bg-foreground text-background hover:bg-foreground/90 uppercase text-xs tracking-[0.2em]"
               >
-                Order Now <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button
-                onClick={() => navigate("/menu")}
-                variant="outline"
-                className="juice-button border-foreground/20 text-foreground hover:bg-foreground hover:text-background uppercase text-xs tracking-[0.2em]"
-              >
-                See the Menu
+                See the Menu <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>

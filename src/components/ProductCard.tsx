@@ -11,7 +11,7 @@ type JuiceSize = "16oz" | "24oz";
 const SIZE_UPCHARGE: Record<JuiceSize, number> = { "16oz": 0, "24oz": 2 };
 
 type CleanseDays = "1 Day" | "3 Day" | "7 Day";
-const CLEANSE_MULTIPLIER: Record<CleanseDays, number> = { "1 Day": 1, "3 Day": 3, "7 Day": 7 };
+const CLEANSE_PRICE: Record<CleanseDays, number> = { "1 Day": 50, "3 Day": 130, "7 Day": 250 };
 
 const BOWL_TOPPINGS = {
   Fruit: ["Banana", "Strawberries", "Blueberries", "Mango", "Kiwi", "Raspberries", "Blackberries"],
@@ -43,7 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const displayPrice = hasSizes
     ? product.price + SIZE_UPCHARGE[size]
     : isCleanse
-    ? product.price * CLEANSE_MULTIPLIER[cleanseDays]
+    ? CLEANSE_PRICE[cleanseDays]
     : product.price;
 
   const toggle = (list: string[], setList: (v: string[]) => void, item: string) => {
@@ -59,12 +59,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         price: product.price + SIZE_UPCHARGE[size],
       });
     } else if (isCleanse) {
-      const mult = CLEANSE_MULTIPLIER[cleanseDays];
+      const cleansePrice = CLEANSE_PRICE[cleanseDays];
       addToCart({
         ...product,
         id: `${product.id}-${cleanseDays.replace(" ", "")}`,
         name: `${product.name} (${cleanseDays})`,
-        price: product.price * mult,
+        price: cleansePrice,
       });
     } else if (isBowl) {
       const addOns = [...toppings, ...drizzles];

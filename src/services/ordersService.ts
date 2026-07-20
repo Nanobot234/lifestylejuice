@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 const dbToOrderFormat = (dbOrder: any, items: CartItem[] = []): Order => {
   return {
     id: dbOrder.id,
+    orderNumber: dbOrder.order_number,
     userId: dbOrder.user_id,
     items: items,
     orderDetails: dbOrder.order_details || {},

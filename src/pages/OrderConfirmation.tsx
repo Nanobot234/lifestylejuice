@@ -115,7 +115,7 @@ const OrderConfirmation = () => {
             </p>
             
             <div className="border-t border-b border-gray-200 py-4 mb-4">
-              <p className="font-medium">Order #{order.id.slice(-5)}</p>
+              <p className="font-medium">Order #{order.orderNumber ?? order.id.slice(-5)}</p>
               <p className="text-gray-600">{new Date(order.createdAt).toLocaleDateString()}</p>
             </div>
             

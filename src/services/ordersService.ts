@@ -21,10 +21,10 @@ export const createOrder = async (userId: string, items: CartItem[], orderDetail
       .from('orders')
       .insert({
         user_id: userId,
-        order_details: orderDetails as any, // Type cast to avoid TypeScript error
+        order_details: orderDetails as any,
         total_amount: total,
         status: "pending",
-      })
+      } as any)
       .select('*')
       .single();
       

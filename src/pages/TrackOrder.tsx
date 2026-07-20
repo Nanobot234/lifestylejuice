@@ -83,12 +83,12 @@ const TrackOrder = () => {
                     id="orderId"
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value)}
-                    placeholder="e.g. a1b2c3 or full ID"
+                    placeholder="e.g. A1B2C3"
                     maxLength={64}
                     required
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    You can enter the full ID or just the last few characters shown on your confirmation.
+                    Enter the 6-character order ID from your confirmation (e.g. A1B2C3).
                   </p>
                 </div>
                 <div>
@@ -129,7 +129,7 @@ const TrackOrder = () => {
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
                   <div>
-                    <CardTitle className="text-lg">Order #{order.id.slice(-5)}</CardTitle>
+                    <CardTitle className="text-lg">Order #{order.order_number ?? order.id.slice(-5)}</CardTitle>
                     <CardDescription>{new Date(order.created_at).toLocaleString()}</CardDescription>
                   </div>
                   <Badge className={`${statusColors[order.status] || "bg-gray-500"} text-white capitalize`}>

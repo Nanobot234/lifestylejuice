@@ -18,6 +18,8 @@ const PaymentSuccess = () => {
   const { currentUser, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const sessionId = searchParams.get("session_id");
+  const [guestOrderId, setGuestOrderId] = useState<string | null>(null);
+  const [guestEmail, setGuestEmail] = useState<string | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
@@ -43,6 +45,10 @@ const PaymentSuccess = () => {
               body: { items: orderItems, orderDetails, total: orderTotal },
             });
             saved = !error && !!data?.orderId;
+            if (saved) {
+              setGuestOrderId(data.orderId as string);
+              setGuestEmail((orderDetails as any)?.email ?? null);
+            }
           }
 
           if (saved) {

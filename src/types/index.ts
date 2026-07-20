@@ -37,6 +37,7 @@ export interface User {
 
 export interface Order {
   id: string;
+  orderNumber?: string;
   userId: string;
   items: CartItem[];
   orderDetails: OrderDetails;

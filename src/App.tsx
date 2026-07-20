@@ -14,6 +14,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import Login from "./pages/Login";
 import MyOrders from "./pages/MyOrders";
+import TrackOrder from "./pages/TrackOrder";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import BusinessDashboard from "./pages/BusinessDashboard";
 import Contact from "./pages/Contact";
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/subscription-success" element={<SubscriptionSuccess />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/my-orders" element={<MyOrders />} />
+                <Route path="/track-order" element={<TrackOrder />} />
                 <Route path="/customer-dashboard" element={<CustomerDashboard />} />
                 <Route path="/business-dashboard" element={<BusinessDashboard />} />
                 <Route path="/contact" element={<Contact />} />

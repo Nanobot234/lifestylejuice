@@ -19,6 +19,7 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import BusinessDashboard from "./pages/BusinessDashboard";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import PromoPopup from "./components/PromoPopup";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ function App() {
           <CartProvider>
             <Toaster />
             <BrowserRouter>
+              <PromoPopup />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/menu" element={<Menu />} />

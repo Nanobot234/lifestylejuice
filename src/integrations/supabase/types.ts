@@ -91,6 +91,7 @@ export type Database = {
           created_at: string
           id: string
           order_details: Json
+          order_number: string
           status: string
           total_amount: number
           updated_at: string
@@ -100,6 +101,7 @@ export type Database = {
           created_at?: string
           id?: string
           order_details?: Json
+          order_number: string
           status?: string
           total_amount: number
           updated_at?: string
@@ -109,6 +111,7 @@ export type Database = {
           created_at?: string
           id?: string
           order_details?: Json
+          order_number?: string
           status?: string
           total_amount?: number
           updated_at?: string
@@ -306,6 +309,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_order_number: { Args: never; Returns: string }
       is_business_owner: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {

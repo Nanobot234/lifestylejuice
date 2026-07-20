@@ -22,6 +22,7 @@ serve(async (req) => {
     }
 
     const trimmedId = orderId.trim();
+    const upperId = trimmedId.toUpperCase();
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
     const normalizedPhone = typeof phone === "string" ? phone.replace(/\D/g, "") : "";
 
@@ -30,13 +31,15 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // Support lookup by full UUID or by last 5-8 chars
-    let query = admin.from("orders").select("*");
+    // Prefer the short human-friendly order_number; fall back to full UUID; then fuzzy id suffix.
+    let query;
     if (trimmedId.length >= 32) {
-      query = query.eq("id", trimmedId);
+      query = admin.from("orders").select("*").eq("id", trimmedId);
     } else {
-      // fuzzy last-chars match (cast uuid to text for ilike)
-      query = query.filter("id::text", "ilike", `%${trimmedId}`);
+      query = admin
+        .from("orders")
+        .select("*")
+        .or(`order_number.eq.${upperId},id::text.ilike.%${trimmedId}`);
     }
 
     const { data: orders, error } = await query.limit(10);

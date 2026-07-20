@@ -106,13 +106,34 @@ const PaymentSuccess = () => {
                 <p className="text-gray-600">{new Date().toLocaleDateString()}</p>
               </div>
             )}
-            
+
+            {!isAuthenticated && guestOrderId && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm">
+                <p className="font-semibold mb-1">Save your order ID to track your order:</p>
+                <p className="font-mono text-xs break-all bg-white border border-amber-200 rounded p-2 mb-2">
+                  {guestOrderId}
+                </p>
+                <p className="text-gray-700">
+                  You can check your order status any time on the{" "}
+                  <button
+                    className="underline font-medium"
+                    onClick={() => navigate(`/track-order?id=${guestOrderId}`)}
+                  >
+                    Track Order
+                  </button>{" "}
+                  page using this ID and {guestEmail ? <span className="font-medium">{guestEmail}</span> : "the email you entered at checkout"}.
+                </p>
+              </div>
+            )}
+
             <div className="flex justify-center space-x-4">
               <Button onClick={() => navigate("/menu")}>Order More</Button>
               {isAuthenticated ? (
                 <Button variant="outline" onClick={() => navigate("/my-orders")}>View My Orders</Button>
               ) : (
-                <Button variant="outline" onClick={() => navigate("/login")}>Sign In / Create Account</Button>
+                <Button variant="outline" onClick={() => navigate(guestOrderId ? `/track-order?id=${guestOrderId}` : "/track-order")}>
+                  Track Order
+                </Button>
               )}
             </div>
           </div>

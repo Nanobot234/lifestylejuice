@@ -31,6 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navItems = [
     { path: "/", label: "Home" },
     { path: "/menu", label: "Menu" },
+    { path: "/track-order", label: "Track Order" },
     { path: "/contact", label: "Contact" },
   ];
 
@@ -113,6 +114,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               }
             >
               Contact
+            </NavLink>
+
+            <NavLink
+              to="/track-order"
+              className={({ isActive }) =>
+                `text-xs tracking-[0.2em] uppercase font-medium transition duration-200 hover:text-foreground ${
+                  isActive ? "text-foreground" : "text-muted-foreground"
+                }`
+              }
+            >
+              Track Order
             </NavLink>
           </nav>
 
@@ -233,6 +245,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         }
                       >
                         Contact
+                      </NavLink>
+                      <NavLink
+                        to="/track-order"
+                        onClick={() => setIsMenuOpen(false)}
+                        className={({ isActive }) =>
+                          `px-2 py-2 rounded-md tracking-[0.15em] uppercase text-sm ${
+                            isActive
+                              ? "bg-muted text-foreground font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          }`
+                        }
+                      >
+                        Track Order
                       </NavLink>
                       
                       {isAuthenticated ? (

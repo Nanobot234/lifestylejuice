@@ -28,19 +28,8 @@ const Cart = () => {
   // Use the total directly from context
   const cartTotal = total;
 
-  // Handle checkout button click
+  // Handle checkout button click — guests are allowed
   const handleCheckout = () => {
-    if (!isAuthenticated) {
-      toast("Please log in to proceed with checkout", {
-        description: "You'll be redirected to the login page.",
-        action: {
-          label: "Login",
-          onClick: () => navigate("/login", { state: { from: "/cart" } })
-        }
-      });
-      return;
-    }
-    
     navigate("/checkout");
   };
 
@@ -173,6 +162,19 @@ const Cart = () => {
                         </>
                       )}
                     </Button>
+                    {!isAuthenticated && (
+                      <p className="text-xs text-center text-gray-500 mt-3">
+                        Checking out as guest.{" "}
+                        <button
+                          type="button"
+                          onClick={() => navigate("/login", { state: { from: "/cart" } })}
+                          className="underline hover:text-juicy-green"
+                        >
+                          Sign in
+                        </button>{" "}
+                        to save your order history.
+                      </p>
+                    )}
                   </div>
                 </TabsContent>
                 

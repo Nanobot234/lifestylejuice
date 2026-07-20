@@ -35,8 +35,8 @@ serve(async (req) => {
     if (trimmedId.length >= 32) {
       query = query.eq("id", trimmedId);
     } else {
-      // fuzzy last-chars match
-      query = query.ilike("id", `%${trimmedId}`);
+      // fuzzy last-chars match (cast uuid to text for ilike)
+      query = query.filter("id::text", "ilike", `%${trimmedId}`);
     }
 
     const { data: orders, error } = await query.limit(10);

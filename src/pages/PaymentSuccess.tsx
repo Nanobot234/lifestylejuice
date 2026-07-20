@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { createOrder } from "@/services/ordersService";
 import { OrderDetails } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -27,13 +28,24 @@ const PaymentSuccess = () => {
         const orderItemsStr = sessionStorage.getItem("orderItems");
         const orderTotalStr = sessionStorage.getItem("orderTotal");
 
-        if (isAuthenticated && currentUser && orderDetailsStr && orderItemsStr && orderTotalStr) {
+        if (orderDetailsStr && orderItemsStr && orderTotalStr) {
           const orderDetails: OrderDetails = JSON.parse(orderDetailsStr);
           const orderItems = JSON.parse(orderItemsStr);
           const orderTotal = parseFloat(orderTotalStr);
 
-          const created = await createOrder(currentUser.id, orderItems, orderDetails, orderTotal);
-          if (created) {
+          let saved = false;
+          if (isAuthenticated && currentUser) {
+            const created = await createOrder(currentUser.id, orderItems, orderDetails, orderTotal);
+            saved = !!created;
+          } else {
+            // Guest checkout — save via edge function using service role
+            const { data, error } = await supabase.functions.invoke("create-guest-order", {
+              body: { items: orderItems, orderDetails, total: orderTotal },
+            });
+            saved = !error && !!data?.orderId;
+          }
+
+          if (saved) {
             toast.success("Payment successful! Your order has been received.");
             sessionStorage.removeItem("orderDetails");
             sessionStorage.removeItem("orderItems");
@@ -91,7 +103,11 @@ const PaymentSuccess = () => {
             
             <div className="flex justify-center space-x-4">
               <Button onClick={() => navigate("/menu")}>Order More</Button>
-              <Button variant="outline" onClick={() => navigate("/my-orders")}>View My Orders</Button>
+              {isAuthenticated ? (
+                <Button variant="outline" onClick={() => navigate("/my-orders")}>View My Orders</Button>
+              ) : (
+                <Button variant="outline" onClick={() => navigate("/login")}>Sign In / Create Account</Button>
+              )}
             </div>
           </div>
         </div>

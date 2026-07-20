@@ -31,20 +31,21 @@ const TrackOrder = () => {
   const [params] = useSearchParams();
   const [orderId, setOrderId] = useState(params.get("id") ?? "");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ order: any; items: any[] } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orderId.trim() || !email.trim()) {
-      toast.error("Please enter both your order ID and email.");
+    if (!orderId.trim()) {
+      toast.error("Please enter your order ID.");
       return;
     }
     setLoading(true);
     setResult(null);
     try {
       const { data, error } = await supabase.functions.invoke("lookup-order", {
-        body: { orderId: orderId.trim(), email: email.trim() },
+        body: { orderId: orderId.trim(), email: email.trim(), phone: phone.trim() },
       });
       if (error || !data?.order) {
         toast.error(data?.error || error?.message || "No order found.");
@@ -69,7 +70,7 @@ const TrackOrder = () => {
             <span className="text-[10px] tracking-[0.25em] text-muted-foreground uppercase">Order Lookup</span>
             <h1 className="font-display text-3xl md:text-4xl mt-2">Track Your Order</h1>
             <p className="text-muted-foreground text-sm mt-3">
-              Enter your order ID and the email you used at checkout.
+              Enter your order ID. Add the email or phone from checkout only if we ask for it.
             </p>
           </div>
 
@@ -91,7 +92,7 @@ const TrackOrder = () => {
                   </p>
                 </div>
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">Email (optional)</Label>
                   <Input
                     id="email"
                     type="email"
@@ -99,7 +100,17 @@ const TrackOrder = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     maxLength={255}
-                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone (optional)</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="(555) 555-5555"
+                    maxLength={32}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>

@@ -40,7 +40,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order: initialOrder }) => {
     channel = subscribeToOrderUpdates(initialOrder.id, (updatedOrder) => {
       if (updatedOrder.status !== previousStatus) {
         // Show a toast notification when the status changes
-        toast.info(`Order #${updatedOrder.id.slice(-5)} status updated: ${updatedOrder.status}`);
+        toast.info(`Order #${updatedOrder.orderNumber ?? updatedOrder.id.slice(-5)} status updated: ${updatedOrder.status}`);
         setPreviousStatus(updatedOrder.status);
       }
       setOrder(updatedOrder);
@@ -76,7 +76,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order: initialOrder }) => {
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-lg">Order #{order.id.slice(-5)}</CardTitle>
+            <CardTitle className="text-lg">Order #{order.orderNumber ?? order.id.slice(-5)}</CardTitle>
             <CardDescription>{formatDate(order.createdAt)}</CardDescription>
           </div>
           {getStatusBadge(order.status)}

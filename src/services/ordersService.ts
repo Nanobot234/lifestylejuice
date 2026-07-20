@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 const dbToOrderFormat = (dbOrder: any, items: CartItem[] = []): Order => {
   return {
     id: dbOrder.id,
+    orderNumber: dbOrder.order_number,
     userId: dbOrder.user_id,
     items: items,
     orderDetails: dbOrder.order_details || {},
@@ -21,10 +22,10 @@ export const createOrder = async (userId: string, items: CartItem[], orderDetail
       .from('orders')
       .insert({
         user_id: userId,
-        order_details: orderDetails as any, // Type cast to avoid TypeScript error
+        order_details: orderDetails as any,
         total_amount: total,
         status: "pending",
-      })
+      } as any)
       .select('*')
       .single();
       

@@ -55,7 +55,7 @@ const OrderManagementTable: React.FC<OrderManagementTableProps> = ({ orders, onS
     
     console.log(`Changing order ${orderId} status from ${currentStatus} to ${newStatus}`);
     onStatusChange(orderId, newStatus);
-    toast.success(`Order #${orderId.slice(-5)} status updated to ${newStatus}`);
+    toast.success(`Order status updated to ${newStatus}`);
   };
   
   // Filter orders if a status filter is applied
@@ -89,7 +89,7 @@ const OrderManagementTable: React.FC<OrderManagementTableProps> = ({ orders, onS
             filteredOrders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell className="font-medium">
-                  #{order.id.slice(-5)}
+                  #{order.orderNumber ?? order.id.slice(-5)}
                   <span className="text-xs text-gray-500 block">
                     Full ID: {order.id}
                   </span>

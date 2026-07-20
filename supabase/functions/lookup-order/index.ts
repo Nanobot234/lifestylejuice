@@ -12,17 +12,18 @@ serve(async (req) => {
   }
 
   try {
-    const { orderId, email } = await req.json();
+    const { orderId, email, phone } = await req.json();
 
-    if (typeof orderId !== "string" || typeof email !== "string" || !orderId.trim() || !email.trim()) {
-      return new Response(JSON.stringify({ error: "Order ID and email are required" }), {
+    if (typeof orderId !== "string" || !orderId.trim()) {
+      return new Response(JSON.stringify({ error: "Order ID is required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
     const trimmedId = orderId.trim();
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const normalizedPhone = typeof phone === "string" ? phone.replace(/\D/g, "") : "";
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -38,7 +39,7 @@ serve(async (req) => {
       query = query.ilike("id", `%${trimmedId}`);
     }
 
-    const { data: orders, error } = await query.limit(5);
+    const { data: orders, error } = await query.limit(10);
     if (error) {
       console.error("lookup-order query error", error);
       return new Response(JSON.stringify({ error: "Lookup failed" }), {
@@ -47,13 +48,29 @@ serve(async (req) => {
       });
     }
 
-    const match = (orders ?? []).find((o: any) => {
-      const orderEmail = (o.order_details?.email ?? "").toString().trim().toLowerCase();
-      return orderEmail === normalizedEmail;
-    });
+    const list = orders ?? [];
+    let match: any = null;
+
+    if (normalizedEmail) {
+      match = list.find((o: any) =>
+        (o.order_details?.email ?? "").toString().trim().toLowerCase() === normalizedEmail
+      );
+    } else if (normalizedPhone) {
+      match = list.find((o: any) => {
+        const p = (o.order_details?.phone ?? "").toString().replace(/\D/g, "");
+        return p && p === normalizedPhone;
+      });
+    } else if (list.length === 1) {
+      match = list[0];
+    } else if (list.length > 1) {
+      return new Response(
+        JSON.stringify({ error: "Multiple orders match that ID. Please provide the email or phone used at checkout." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     if (!match) {
-      return new Response(JSON.stringify({ error: "No order found matching that ID and email" }), {
+      return new Response(JSON.stringify({ error: "No order found matching those details" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

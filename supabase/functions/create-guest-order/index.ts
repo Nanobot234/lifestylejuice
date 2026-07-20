@@ -35,7 +35,7 @@ serve(async (req) => {
         total_amount: total,
         status: "pending",
       })
-      .select("*")
+      .select("id, order_number")
       .single();
 
     if (orderError) {
@@ -63,7 +63,7 @@ serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ orderId: order.id }), {
+    return new Response(JSON.stringify({ orderId: order.id, orderNumber: order.order_number }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

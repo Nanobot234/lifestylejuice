@@ -19,6 +19,7 @@ const PaymentSuccess = () => {
   const [isLoading, setIsLoading] = useState(true);
   const sessionId = searchParams.get("session_id");
   const [guestOrderId, setGuestOrderId] = useState<string | null>(null);
+  const [guestOrderNumber, setGuestOrderNumber] = useState<string | null>(null);
   const [guestEmail, setGuestEmail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ const PaymentSuccess = () => {
             saved = !error && !!data?.orderId;
             if (saved) {
               setGuestOrderId(data.orderId as string);
+              setGuestOrderNumber((data.orderNumber as string) ?? null);
               setGuestEmail((orderDetails as any)?.email ?? null);
             }
           }
@@ -107,21 +109,21 @@ const PaymentSuccess = () => {
               </div>
             )}
 
-            {!isAuthenticated && guestOrderId && (
+            {!isAuthenticated && (guestOrderNumber || guestOrderId) && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm">
                 <p className="font-semibold mb-1">Save your order ID to track your order:</p>
-                <p className="font-mono text-xs break-all bg-white border border-amber-200 rounded p-2 mb-2">
-                  {guestOrderId}
+                <p className="font-mono text-base tracking-widest bg-white border border-amber-200 rounded p-2 mb-2 text-center">
+                  {guestOrderNumber ?? guestOrderId}
                 </p>
                 <p className="text-gray-700">
                   You can check your order status any time on the{" "}
                   <button
                     className="underline font-medium"
-                    onClick={() => navigate(`/track-order?id=${guestOrderId}`)}
+                    onClick={() => navigate(`/track-order?id=${guestOrderNumber ?? guestOrderId}`)}
                   >
                     Track Order
                   </button>{" "}
-                  page using this ID and {guestEmail ? <span className="font-medium">{guestEmail}</span> : "the email you entered at checkout"}.
+                  page using this ID.
                 </p>
               </div>
             )}
@@ -131,7 +133,7 @@ const PaymentSuccess = () => {
               {isAuthenticated ? (
                 <Button variant="outline" onClick={() => navigate("/my-orders")}>View My Orders</Button>
               ) : (
-                <Button variant="outline" onClick={() => navigate(guestOrderId ? `/track-order?id=${guestOrderId}` : "/track-order")}>
+                <Button variant="outline" onClick={() => navigate((guestOrderNumber || guestOrderId) ? `/track-order?id=${guestOrderNumber ?? guestOrderId}` : "/track-order")}>
                   Track Order
                 </Button>
               )}

@@ -1,7 +1,7 @@
 import { CartItem, Order, OrderDetails } from "../types";
 import { supabase } from "@/integrations/supabase/client";
 
-// Helper function to convert database response to app Order format
+// Convert a raw Supabase `orders` row (plus its items) into the app's Order type.
 const dbToOrderFormat = (dbOrder: any, items: CartItem[] = []): Order => {
   return {
     id: dbOrder.id,
@@ -15,6 +15,7 @@ const dbToOrderFormat = (dbOrder: any, items: CartItem[] = []): Order => {
   };
 };
 
+// Create an order record and its line items for a logged-in customer.
 export const createOrder = async (userId: string, items: CartItem[], orderDetails: OrderDetails, total: number): Promise<Order | null> => {
   try {
     // Begin a transaction
@@ -64,6 +65,7 @@ export const createOrder = async (userId: string, items: CartItem[], orderDetail
   }
 };
 
+// Fetch all orders belonging to a specific customer, including their line items.
 export const getUserOrders = async (userId: string): Promise<Order[]> => {
   try {
     if (!userId) {
@@ -133,6 +135,7 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
   }
 };
 
+// Fetch every order in the system (used by the business dashboard).
 export const getAllOrders = async (): Promise<Order[]> => {
   try {
     // First, get all orders
@@ -193,6 +196,7 @@ export const getAllOrders = async (): Promise<Order[]> => {
   }
 };
 
+// Update the status of an order (e.g., pending → preparing → ready → completed).
 export const updateOrderStatus = async (orderId: string, status: Order["status"]): Promise<Order | null> => {
   try {
     console.log(`Updating order status: Order ID ${orderId} to ${status}`);
@@ -272,6 +276,7 @@ export const updateOrderStatus = async (orderId: string, status: Order["status"]
   }
 };
 
+// Subscribe to realtime Postgres changes for a single order.
 export const subscribeToOrderUpdates = (orderId: string, callback: (order: Order) => void) => {
   const channel = supabase
     .channel(`order-${orderId}`)
@@ -297,6 +302,7 @@ export const subscribeToOrderUpdates = (orderId: string, callback: (order: Order
   return channel;
 };
 
+// Fetch a single order by its UUID, including its line items.
 export const getOrderById = async (orderId: string): Promise<Order | null> => {
   try {
     const { data: order, error } = await supabase

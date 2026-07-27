@@ -1,69 +1,169 @@
-# Welcome to your Lovable project
+# Lifestyle 1104 Juice Bar
 
-## Project info
+E-commerce web app for **Lifestyle 1104**, a NYC juice bar with locations in the Bronx and Manhattan. Customers can browse the menu, order for pickup, pay with Stripe, and track their orders. Store owners manage products and orders from an admin dashboard.
 
-**URL**: https://lovable.dev/projects/e9892577-f1d0-4eb9-902e-76144bc8c549
+Live: https://lifestylejuice.lovable.app
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+**Storefront**
+- Product catalog grouped by category (Signature Blends, Fresh Juices, Cold-Pressed Juices, Bowls, Toasts, Protein Bites, Sea Moss, Juice Cleanse)
+- Cart with mixed-basket protection (shippable items and pickup items can't be combined in one order)
+- Multi-location pickup selection with Google Maps directions
+- Shipping option for shelf-stable products (Sea Moss, Cold-Pressed Juices, Protein Bites) with state-based rates
+- Guest checkout with a short human-readable order number (e.g. `A1B2C3`)
+- Order tracking page — look up any order by its 6-character code
+- Optional account creation (auto-redirects to My Orders on signup)
+- 15% off email-capture promo popup after ~8s on first visit
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e9892577-f1d0-4eb9-902e-76144bc8c549) and start prompting.
+**Payments**
+- Stripe Checkout (currently in **test mode** for client testing)
+- One-time payments for orders and a subscription flow for the Juice Cleanse packages (1/3/7 day)
 
-Changes made via Lovable will be committed automatically to this repo.
+**Admin (Business Dashboard)**
+- View active and completed orders, update status (`pending → preparing → ready → delivered → completed`)
+- Manage products (create, edit, delete, upload images)
+- Manage subscription plans
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+| Layer | Technology |
+| --- | --- |
+| Framework | React 18 + Vite 5 + TypeScript |
+| Styling | Tailwind CSS + shadcn/ui (Radix primitives) |
+| Routing | React Router v6 |
+| Data fetching | TanStack Query |
+| Forms & validation | React Hook Form + Zod |
+| Backend | Lovable Cloud (Supabase — Postgres, Auth, Storage, Edge Functions) |
+| Payments | Stripe Checkout via Supabase Edge Functions |
+| Icons | lucide-react |
+| Notifications | Sonner |
 
-Follow these steps:
+---
+
+## Architecture
+
+```text
+┌──────────────────────────────┐        ┌──────────────────────────────┐
+│  React SPA (Vite)            │        │  Lovable Cloud (Supabase)    │
+│                              │        │                              │
+│  ├─ pages/       routes      │  RLS   │  ├─ Postgres tables          │
+│  ├─ components/  UI + shadcn │◄──────►│  │   products, orders,       │
+│  ├─ context/     Auth + Cart │  auth  │  │   order_items, profiles,  │
+│  ├─ services/    DB queries  │        │  │   subscriptions, ...      │
+│  └─ hooks/                   │        │  ├─ Auth (email/password)    │
+└──────────────┬───────────────┘        │  ├─ Storage (product imgs)   │
+               │                        │  └─ Edge Functions           │
+               │  supabase.functions    │      ├─ create-payment       │
+               └───────────────────────►│      ├─ create-guest-order   │
+                                        │      ├─ create-subscription  │
+                                        │      ├─ customer-portal      │
+                                        │      └─ lookup-order         │
+                                        └──────────────┬───────────────┘
+                                                       │ Stripe API
+                                                       ▼
+                                                  ┌─────────┐
+                                                  │ Stripe  │
+                                                  └─────────┘
+```
+
+### Frontend structure
+
+```
+src/
+├── pages/                Route components (Index, Menu, Cart, Checkout,
+│                         PaymentSuccess, MyOrders, TrackOrder,
+│                         BusinessDashboard, CustomerDashboard, Contact, ...)
+├── components/
+│   ├── ui/               shadcn/ui primitives
+│   ├── business/         Admin dashboard tabs & product forms
+│   ├── orders/           Order list / card / states
+│   ├── subscription/     Subscription cards & forms
+│   ├── Layout.tsx        Top nav + logo + Menu dropdown
+│   ├── ProductCard.tsx   Handles size / cleanse-duration logic
+│   └── PromoPopup.tsx    15% off newsletter modal
+├── context/
+│   ├── AuthProvider.tsx  Supabase session → app User
+│   └── CartContext.tsx   Cart state + shippable/pickup separation rule
+├── services/             Thin data-access wrappers (products, orders,
+│                         subscriptions) over the Supabase client
+├── integrations/supabase/  Auto-generated client + typed schema
+├── lib/                  utils, shipping calculator
+└── types/                Shared TS types (Product, Order, User, ...)
+```
+
+### Backend (Supabase / Lovable Cloud)
+
+**Key tables**
+- `products` — menu items, price, category, image URL, `is_shippable` flag
+- `orders` — one per checkout, with a unique 6-char `order_number` auto-generated by a Postgres trigger
+- `order_items` — line items joined to `products`
+- `profiles` — extends `auth.users` with `role` (`customer` / `business_owner`) and contact info
+- `subscription_plans`, `user_subscriptions`, `subscription_items` — juice cleanse subscriptions
+- `newsletter_subscribers` — emails captured by the promo popup
+
+All public tables enable **Row-Level Security**. Customers can read/write only their own orders and profile; business owners have elevated read/update rights via a `has_role()` security-definer function. Edge functions that need to bypass RLS (like guest order creation) use the service role key.
+
+**Edge functions** (`supabase/functions/`)
+- `create-payment` — creates a Stripe Checkout Session for a logged-in customer's cart
+- `create-guest-order` — writes the order + items server-side for guest checkout, then creates the Stripe session
+- `lookup-order` — public order tracking; matches by short `order_number` (or full UUID), optionally verified by email/phone
+- `create-subscription` / `customer-portal` — Stripe subscription flow for the Juice Cleanse
+
+### Auth flow
+
+1. Email/password signup via Supabase (email verification disabled — users are auto-confirmed).
+2. On successful sign-in, `AuthProvider` fetches the row from `profiles` and derives `isBusinessOwner` from the `role` column.
+3. `useAuth()` exposes `currentUser`, `isAuthenticated`, `isBusinessOwner`, and login/signup/logout helpers.
+4. Guest checkout bypasses auth entirely — the order is written by the `create-guest-order` edge function and later found by order number.
+
+### Order lifecycle
+
+```
+Cart → Checkout → Stripe Checkout Session ──► Stripe hosted payment
+                                                        │
+                        ┌──────── success redirect ─────┘
+                        ▼
+           PaymentSuccess page shows order_number
+                        │
+                        ▼
+        Admin marks: pending → preparing → ready → delivered → completed
+```
+
+---
+
+## Running locally
+
+Requires Node.js 18+ and npm.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
 cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Environment variables (auto-populated by Lovable Cloud, don't edit `.env` manually):
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_SUPABASE_PROJECT_ID`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Server-side secrets used by edge functions (managed in the Lovable backend UI):
+- `STRIPE_SECRET_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Editing & Deployment
 
-## What technologies are used for this project?
+This project is built and hosted on [Lovable](https://lovable.dev). You can edit it three ways:
 
-This project is built with .
+1. **Lovable editor** — prompt changes in the chat; commits sync automatically to this repo.
+2. **Your own IDE** — clone the repo, edit, and push. Pushes sync back into Lovable.
+3. **GitHub web editor / Codespaces** — edit files directly on GitHub.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/e9892577-f1d0-4eb9-902e-76144bc8c549) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Deploy by opening the Lovable project and clicking **Share → Publish**. A custom domain can be attached from the Lovable project settings.

@@ -6,6 +6,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Edge function that creates an order for a guest (no authentication required).
+// Uses the service role to bypass RLS because the user is not logged in.
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -21,7 +23,7 @@ serve(async (req) => {
       });
     }
 
-    // Use service role to bypass RLS for guest order inserts
+    // Create an admin Supabase client to write the guest order and items.
     const admin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""

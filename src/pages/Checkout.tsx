@@ -34,6 +34,7 @@ import { DeliveryMethod, PaymentMethod } from "@/types";
 import { toast } from "sonner";
 import { calculateShipping, hasShippableItems, US_STATES } from "@/lib/shipping";
 
+// Store locations shown on the checkout pickup selector with Google Maps directions.
 const PICKUP_LOCATIONS = [
   {
     id: "bronx",
@@ -49,6 +50,7 @@ const PICKUP_LOCATIONS = [
   },
 ];
 
+// Zod schema for checkout form validation. Address fields are required only for shipping.
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   phone: z.string().min(10, "Valid phone number is required"),
@@ -100,6 +102,7 @@ const Checkout = () => {
   const pickupLocationId = form.watch("pickupLocation");
   const selectedPickup = PICKUP_LOCATIONS.find((l) => l.id === pickupLocationId);
 
+  // Validate the form, build the order details, and redirect the customer to Stripe Checkout.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     
@@ -180,6 +183,7 @@ const Checkout = () => {
     }
   };
 
+  // Recalculate order totals live as the user changes delivery method or state.
   const subtotal = total;
   const tax = subtotal * 0.08;
   const localDeliveryFee = deliveryMethod === "delivery" ? 3.99 : 0;

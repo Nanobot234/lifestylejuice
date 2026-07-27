@@ -23,6 +23,7 @@ import PromoPopup from "./components/PromoPopup";
 
 const queryClient = new QueryClient();
 
+// Root component: wraps the app in providers and defines the React Router routes.
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

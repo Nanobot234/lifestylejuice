@@ -27,6 +27,8 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const { addToCart } = useCart();
+
+  // Determine which customization UI this product needs based on category.
   const hasSizes =
     product.category === "fresh juice" ||
     product.category === "superfood blends" ||
@@ -34,22 +36,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const isColdPressed = product.category === "cold-pressed juice";
   const isBowl = product.category === "bowls";
   const isCleanse = product.category === "cold pressed juice cleans";
+
+  // Local state for size, cleanse duration, and bowl customizations.
   const [size, setSize] = useState<JuiceSize>("16oz");
   const [cleanseDays, setCleanseDays] = useState<CleanseDays>("1 Day");
   const [toppings, setToppings] = useState<string[]>([]);
   const [drizzles, setDrizzles] = useState<string[]>([]);
   const [customizeOpen, setCustomizeOpen] = useState(false);
 
+  // Calculate the price shown to the user, accounting for size/cleanse options.
   const displayPrice = hasSizes
     ? product.price + SIZE_UPCHARGE[size]
     : isCleanse
     ? CLEANSE_PRICE[cleanseDays]
     : product.price;
 
+  // Toggle a bowl topping or drizzle in/out of a selected list.
   const toggle = (list: string[], setList: (v: string[]) => void, item: string) => {
     setList(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
   };
 
+  // Build the final cart item (with customizations) and add it to the cart.
   const handleAddToCart = () => {
     if (hasSizes) {
       addToCart({

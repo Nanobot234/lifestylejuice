@@ -6,10 +6,15 @@ import { User } from "../types";
 import { supabase } from "@/integrations/supabase/client";
 import { Session } from "@supabase/supabase-js";
 
+/**
+ * Provides authentication state and auth actions to the React app.
+ * Restores the current session on mount and listens for Supabase auth events.
+ */
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Restore the session when the app first loads and subscribe to auth changes.
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -44,6 +49,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
   }, []);
 
+  // Wrap utility helpers so callers don't need to know about loading state.
   const handleSignupWithEmail = async (email: string, password: string) => 
     await signupWithEmail(email, password, setIsLoading);
 
@@ -61,6 +67,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const handleLogout = () => logout(setCurrentUser);
+
+  // Expose auth state and actions to the rest of the application.
 
   const value = {
     currentUser,

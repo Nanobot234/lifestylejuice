@@ -16,7 +16,7 @@ const Menu = () => {
   const [dbProducts, setDbProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch products from Supabase
+  // Load products from Supabase on mount; ignore stale updates if the component unmounts.
   useEffect(() => {
     let mounted = true;
     setLoading(true);
@@ -44,10 +44,12 @@ const Menu = () => {
     product.ingredients.some((i: string) => i.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  // Update the search term when the user types in the search input.
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
+  // Return products for a specific category, or all filtered products for the "all" tab.
   const getCategoryProducts = (category: string) => {
     if (category === "all") {
       return filteredProducts;

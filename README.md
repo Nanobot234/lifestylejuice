@@ -2,8 +2,6 @@
 
 E-commerce web app for **Lifestyle 1104**, a NYC juice bar with locations in the Bronx and Manhattan. Customers can browse the menu, order for pickup, pay with Stripe, and track their orders. Store owners manage products and orders from an admin dashboard.
 
-
-
 ---
 
 ## Features

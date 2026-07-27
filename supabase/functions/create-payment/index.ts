@@ -8,6 +8,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Edge function that creates a Stripe Checkout session for a cart payment.
+// Works for both authenticated users and guest checkouts.
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -76,7 +78,7 @@ serve(async (req) => {
       });
     }
 
-    // Create a one-time payment session
+    // Create a one-time Stripe Checkout session with the cart line items and fees.
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : customerEmail,

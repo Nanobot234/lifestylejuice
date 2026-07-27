@@ -2,7 +2,7 @@
 
 E-commerce web app for **Lifestyle 1104**, a NYC juice bar with locations in the Bronx and Manhattan. Customers can browse the menu, order for pickup, pay with Stripe, and track their orders. Store owners manage products and orders from an admin dashboard.
 
-Live: https://lifestylejuice.lovable.app
+
 
 ---
 
@@ -156,14 +156,3 @@ Server-side secrets used by edge functions (managed in the Lovable backend UI):
 - `STRIPE_SECRET_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 
----
-
-## Editing & Deployment
-
-This project is built and hosted on [Lovable](https://lovable.dev). You can edit it three ways:
-
-1. **Lovable editor** — prompt changes in the chat; commits sync automatically to this repo.
-2. **Your own IDE** — clone the repo, edit, and push. Pushes sync back into Lovable.
-3. **GitHub web editor / Codespaces** — edit files directly on GitHub.
-
-Deploy by opening the Lovable project and clicking **Share → Publish**. A custom domain can be attached from the Lovable project settings.
